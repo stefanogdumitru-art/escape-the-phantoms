@@ -103,6 +103,7 @@ controller.down.on_event(ControllerButtonEvent.PRESSED, on_down_pressed)
 
 def on_on_overlap(sprite, otherSprite):
     info.change_life_by(-1)
+    pause(500)
     sprites.destroy(otherSprite)
 
 sprites.on_overlap(SpriteKind.player, SpriteKind.enemy, on_on_overlap)
