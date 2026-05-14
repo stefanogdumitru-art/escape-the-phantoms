@@ -1,0 +1,12 @@
+{
+    "image1": {
+        "data": "hwQMABAAAAAA4O7uAPDdAADu7u7/v90A4O7u7t3//wDg7u6/0b+7/+7u7v/fvbv/7u7u3d29uw/u7t7d3b27D+7u3v/fvbv/4O7uv9G/u//g7u7u3f//AADu7u7/v90AAODu7gDw3QA=",
+        "mimeType": "image/x-mkcd-f4",
+        "displayName": "Ben Clark"
+    },
+    "*": {
+        "mimeType": "image/x-mkcd-f4",
+        "dataEncoding": "base64",
+        "namespace": "myImages"
+    }
+}
