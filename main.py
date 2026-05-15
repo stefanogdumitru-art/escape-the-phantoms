@@ -17,7 +17,110 @@ VARIABLES
 
 """
 
+def on_up_pressed():
+    global direction
+    direction = 3
+controller.up.on_event(ControllerButtonEvent.PRESSED, on_up_pressed)
 
+def on_a_pressed():
+    global projectile
+    if projectile == 1:
+        projectile = sprites.create_projectile_from_sprite(img("""
+                . . . . . . . . . . . . . . . .
+                . . . . . . . . . . . . . . . .
+                . . . . . . . . . . . . . . . .
+                . . . . . . . . . . . . . . . .
+                . . . . . . . . . . . . . . . .
+                . . . . . . . . . . . . . . . .
+                . . . . . . f f f . . . . . . .
+                . . . . . f f f f f . . . . . .
+                . . . . . f f f f f . . . . . .
+                . . . . . f f f f f . . . . . .
+                . . . . . . f f f . . . . . . .
+                . . . . . . . . . . . . . . . .
+                . . . . . . . . . . . . . . . .
+                . . . . . . . . . . . . . . . .
+                . . . . . . . . . . . . . . . .
+                . . . . . . . . . . . . . . . .
+                """),
+            Ben_Clark,
+            500,
+            0)
+    elif projectile == 2:
+        projectile = sprites.create_projectile_from_sprite(img("""
+                . . . . . . . . . . . . . . . .
+                . . . . . . . . . . . . . . . .
+                . . . . . . . . . . . . . . . .
+                . . . . . . . . . . . . . . . .
+                . . . . . . . . . . . . . . . .
+                . . . . . . . . . . . . . . . .
+                . . . . . . f f f . . . . . . .
+                . . . . . f f f f f . . . . . .
+                . . . . . f f f f f . . . . . .
+                . . . . . f f f f f . . . . . .
+                . . . . . . f f f . . . . . . .
+                . . . . . . . . . . . . . . . .
+                . . . . . . . . . . . . . . . .
+                . . . . . . . . . . . . . . . .
+                . . . . . . . . . . . . . . . .
+                . . . . . . . . . . . . . . . .
+                """),
+            Ben_Clark,
+            -500,
+            0)
+    elif projectile == 3:
+        projectile = sprites.create_projectile_from_sprite(img("""
+                . . . . . . . . . . . . . . . .
+                . . . . . . . . . . . . . . . .
+                . . . . . . . . . . . . . . . .
+                . . . . . . . . . . . . . . . .
+                . . . . . . . . . . . . . . . .
+                . . . . . . . . . . . . . . . .
+                . . . . . . f f f . . . . . . .
+                . . . . . f f f f f . . . . . .
+                . . . . . f f f f f . . . . . .
+                . . . . . f f f f f . . . . . .
+                . . . . . . f f f . . . . . . .
+                . . . . . . . . . . . . . . . .
+                . . . . . . . . . . . . . . . .
+                . . . . . . . . . . . . . . . .
+                . . . . . . . . . . . . . . . .
+                . . . . . . . . . . . . . . . .
+                """),
+            Ben_Clark,
+            0,
+            500)
+    elif projectile == 4:
+        projectile = sprites.create_projectile_from_sprite(img("""
+                . . . . . . . . . . . . . . . .
+                . . . . . . . . . . . . . . . .
+                . . . . . . . . . . . . . . . .
+                . . . . . . . . . . . . . . . .
+                . . . . . . . . . . . . . . . .
+                . . . . . . . . . . . . . . . .
+                . . . . . . f f f . . . . . . .
+                . . . . . f f f f f . . . . . .
+                . . . . . f f f f f . . . . . .
+                . . . . . f f f f f . . . . . .
+                . . . . . . f f f . . . . . . .
+                . . . . . . . . . . . . . . . .
+                . . . . . . . . . . . . . . . .
+                . . . . . . . . . . . . . . . .
+                . . . . . . . . . . . . . . . .
+                . . . . . . . . . . . . . . . .
+                """),
+            Ben_Clark,
+            0,
+            -500)
+controller.A.on_event(ControllerButtonEvent.PRESSED, on_a_pressed)
+
+def on_left_pressed():
+    global direction
+    direction = 2
+controller.left.on_event(ControllerButtonEvent.PRESSED, on_left_pressed)
+
+# =========================
+# SPAWN FUNCTION
 # =========================
 def spawn_phantom():
     global phantom2
@@ -131,7 +234,7 @@ now = 0
 enemies: List[Sprite] = []
 item: Sprite = None
 phantom2: Sprite = None
-projectile: Sprite = None
+projectile = 0
 direction = 0
 last_spawn_time = 0
 current_level = 0
@@ -244,108 +347,3 @@ def on_on_update4():
             spawn_phantom()
         last_spawn_time = current_time3
 game.on_update(on_on_update4)
-
-def on_up_pressed():
-    global direction
-    direction = 3
-controller.up.on_event(ControllerButtonEvent.PRESSED, on_up_pressed)
-
-def on_a_pressed():
-    global projectile
-    if projectile == 1:
-        projectile = sprites.create_projectile_from_sprite(img("""
-                . . . . . . . . . . . . . . . .
-                . . . . . . . . . . . . . . . .
-                . . . . . . . . . . . . . . . .
-                . . . . . . . . . . . . . . . .
-                . . . . . . . . . . . . . . . .
-                . . . . . . . . . . . . . . . .
-                . . . . . . f f f . . . . . . .
-                . . . . . f f f f f . . . . . .
-                . . . . . f f f f f . . . . . .
-                . . . . . f f f f f . . . . . .
-                . . . . . . f f f . . . . . . .
-                . . . . . . . . . . . . . . . .
-                . . . . . . . . . . . . . . . .
-                . . . . . . . . . . . . . . . .
-                . . . . . . . . . . . . . . . .
-                . . . . . . . . . . . . . . . .
-                """),
-            Ben_Clark,
-            100,
-            0)
-    elif projectile == 2:
-        projectile = sprites.create_projectile_from_sprite(img("""
-                . . . . . . . . . . . . . . . .
-                . . . . . . . . . . . . . . . .
-                . . . . . . . . . . . . . . . .
-                . . . . . . . . . . . . . . . .
-                . . . . . . . . . . . . . . . .
-                . . . . . . . . . . . . . . . .
-                . . . . . . f f f . . . . . . .
-                . . . . . f f f f f . . . . . .
-                . . . . . f f f f f . . . . . .
-                . . . . . f f f f f . . . . . .
-                . . . . . . f f f . . . . . . .
-                . . . . . . . . . . . . . . . .
-                . . . . . . . . . . . . . . . .
-                . . . . . . . . . . . . . . . .
-                . . . . . . . . . . . . . . . .
-                . . . . . . . . . . . . . . . .
-                """),
-            Ben_Clark,
-            -100,
-            0)
-    elif projectile == 3:
-        projectile = sprites.create_projectile_from_sprite(img("""
-                . . . . . . . . . . . . . . . .
-                . . . . . . . . . . . . . . . .
-                . . . . . . . . . . . . . . . .
-                . . . . . . . . . . . . . . . .
-                . . . . . . . . . . . . . . . .
-                . . . . . . . . . . . . . . . .
-                . . . . . . f f f . . . . . . .
-                . . . . . f f f f f . . . . . .
-                . . . . . f f f f f . . . . . .
-                . . . . . f f f f f . . . . . .
-                . . . . . . f f f . . . . . . .
-                . . . . . . . . . . . . . . . .
-                . . . . . . . . . . . . . . . .
-                . . . . . . . . . . . . . . . .
-                . . . . . . . . . . . . . . . .
-                . . . . . . . . . . . . . . . .
-                """),
-            Ben_Clark,
-            0,
-            -100)
-    elif projectile == 4:
-        projectile = sprites.create_projectile_from_sprite(img("""
-                . . . . . . . . . . . . . . . .
-                . . . . . . . . . . . . . . . .
-                . . . . . . . . . . . . . . . .
-                . . . . . . . . . . . . . . . .
-                . . . . . . . . . . . . . . . .
-                . . . . . . . . . . . . . . . .
-                . . . . . . f f f . . . . . . .
-                . . . . . f f f f f . . . . . .
-                . . . . . f f f f f . . . . . .
-                . . . . . f f f f f . . . . . .
-                . . . . . . f f f . . . . . . .
-                . . . . . . . . . . . . . . . .
-                . . . . . . . . . . . . . . . .
-                . . . . . . . . . . . . . . . .
-                . . . . . . . . . . . . . . . .
-                . . . . . . . . . . . . . . . .
-                """),
-            Ben_Clark,
-            0,
-            100)
-controller.A.on_event(ControllerButtonEvent.PRESSED, on_a_pressed)
-
-def on_left_pressed():
-    global direction
-    direction = 2
-controller.left.on_event(ControllerButtonEvent.PRESSED, on_left_pressed)
-
-# =========================
-# SPAWN FUNCTION
