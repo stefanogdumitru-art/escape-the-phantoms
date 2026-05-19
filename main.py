@@ -312,46 +312,63 @@ def on_on_update4():
         last_spawn_time = current_time3
 game.on_update(on_on_update4)
 
-def shoot():
+# =========================
+# AMMO SYSTEM
+# =========================
 
+ammo = 15
+MAX_AMMO = 15
+
+
+def spawn_ammo_item():
+    item = sprites.create(img("""
+        . . . . 7 7 7 . . . .
+        . . 7 7 7 7 7 7 7 . .
+        . 7 7 7 7 7 7 7 7 7 .
+        . 7 7 7 7 7 7 7 7 7 .
+        . . 7 7 7 7 7 7 7 . .
+        . . . . 7 7 7 . . . .
+    """), SpriteKind.food)
+
+    item.set_position(randint(16, 300), randint(16, 300))
+
+
+# spawn ammo randomly (less often than hearts)
+def ammo_spawn_loop():
+    if current_level == 2 and randint(0, 1500) < 1:
+        spawn_ammo_item()
+
+game.on_update(ammo_spawn_loop)
+
+
+# =========================
+# PICKUP AMMO
+# =========================
+
+def on_ammo_pickup(player, item):
     global ammo
 
-    # level 2 only
+    ammo = min(MAX_AMMO, ammo + 5)
+    sprites.destroy(item)
+
+sprites.on_overlap(SpriteKind.player, SpriteKind.food, on_ammo_pickup)
+
+
+# =========================
+# MODIFY SHOOT (ammo version wrapper)
+# =========================
+
+def shoot_with_ammo():
+    global ammo
+
     if current_level != 2:
         return
 
-    # ammo check
     if ammo <= 0:
         return
 
     ammo -= 1
+    shoot()   # your ORIGINAL auto-aim function
 
-    enemies = sprites.all_of_kind(SpriteKind.enemy)
-    if len(enemies) == 0:
-        return
-
-    # find closest enemy
-    target = enemies[0]
-    closest_distance = 999999
-
-    for enemy in enemies:
-
-        distance = Math.sqrt(
-            (enemy.x - Ben_Clark.x) * (enemy.x - Ben_Clark.x) +
-            (enemy.y - Ben_Clark.y) * (enemy.y - Ben_Clark.y)
-        )
-
-        if distance < closest_distance:
-            closest_distance = distance
-            target = enemy
-
-    # create bullet
-    bullet = sprites.create(img("""
-        . . 5 5 . .
-        . 5 5 5 5 .
-        . . 5 5 . .
-    """), SpriteKind.bullet)
-
-    bullet.set_position(Ben_Clark.x, Ben_Clark.y)
-    bullet.follow(target, 200)
-    bullet.lifespan = 2000
+# override A button
+controller.A.on_event(ControllerButtonEvent.PRESSED, shoot_with_ammo)

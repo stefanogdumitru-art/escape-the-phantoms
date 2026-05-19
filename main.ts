@@ -13,11 +13,10 @@ let current_level = 1
 //  =========================
 //  AUTO AIM SHOOT
 //  =========================
-//  press A to shoot
-controller.A.onEvent(ControllerButtonEvent.Pressed, function shoot() {
+function shoot() {
     let distance: number;
-    //  only works in level 1
-    if (current_level != 1) {
+    //  only works in level 2
+    if (current_level != 2) {
         return
     }
     
@@ -50,7 +49,10 @@ controller.A.onEvent(ControllerButtonEvent.Pressed, function shoot() {
     bullet.follow(target, 200)
     //  delete bullet after time
     bullet.lifespan = 2000
-})
+}
+
+//  press A to shoot
+controller.A.onEvent(ControllerButtonEvent.Pressed, shoot)
 //  =========================
 //  BULLET KILLS PHANTOMS
 //  =========================
@@ -311,40 +313,53 @@ game.onUpdate(function on_on_update4() {
     }
     
 })
+//  =========================
+//  AMMO SYSTEM
+//  =========================
 let ammo = 15
-let max_ammo = 15
-let ammo_item = SpriteKind.create()
-function set_ammo(value: number) {
-    
-    ammo = value
-}
-
-if (ammo <= 0) {
-    return
-}
-
-ammo -= 1
+let MAX_AMMO = 15
 function spawn_ammo_item() {
     let item = sprites.create(img`
-        . . . . 8 8 8 . . . .
-        . . 8 8 8 8 8 8 8 . .
-        . 8 8 . 8 8 8 . 8 8 .
-        . 8 8 8 8 8 8 8 8 8 .
-        . 8 8 . 8 8 8 . 8 8 .
-        . . 8 8 8 8 8 8 8 . .
-        . . . . 8 8 8 . . . .
-    `, SpriteKind.ammo_item)
+        . . . . 7 7 7 . . . .
+        . . 7 7 7 7 7 7 7 . .
+        . 7 7 7 7 7 7 7 7 7 .
+        . 7 7 7 7 7 7 7 7 7 .
+        . . 7 7 7 7 7 7 7 . .
+        . . . . 7 7 7 . . . .
+    `, SpriteKind.Food)
     item.setPosition(randint(16, 300), randint(16, 300))
 }
 
-game.onUpdate(function on_on_update_ammo() {
-    if (randint(0, 900) < 1) {
+//  spawn ammo randomly (less often than hearts)
+game.onUpdate(function ammo_spawn_loop() {
+    if (current_level == 2 && randint(0, 1500) < 1) {
         spawn_ammo_item()
     }
     
 })
-sprites.onOverlap(SpriteKind.Player, SpriteKind.ammo_item, function on_ammo_overlap(player: Sprite, item: Sprite) {
+//  =========================
+//  PICKUP AMMO
+//  =========================
+sprites.onOverlap(SpriteKind.Player, SpriteKind.Food, function on_ammo_pickup(player: Sprite, item: Sprite) {
     
-    ammo = Math.min(max_ammo, ammo + 5)
+    ammo = Math.min(MAX_AMMO, ammo + 5)
     sprites.destroy(item)
+})
+//  =========================
+//  MODIFY SHOOT (ammo version wrapper)
+//  =========================
+//  your ORIGINAL auto-aim function
+//  override A button
+controller.A.onEvent(ControllerButtonEvent.Pressed, function shoot_with_ammo() {
+    
+    if (current_level != 2) {
+        return
+    }
+    
+    if (ammo <= 0) {
+        return
+    }
+    
+    ammo -= 1
+    shoot()
 })
