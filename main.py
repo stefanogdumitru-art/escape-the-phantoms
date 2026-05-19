@@ -1,87 +1,15 @@
 @namespace
-
-# =========================
-# SPRITE KINDS
-# =========================
 class SpriteKind:
     enemy = SpriteKind.create()
     bullet = SpriteKind.create()
-
-
-# =========================
-# LEVEL TRACKER
-# =========================
-current_level = 1
-
-
-# =========================
-# AUTO AIM SHOOT
-# =========================
-def shoot():
-
-    # only works in level 2
-    if current_level != 2:
-        return
-
-    # find all phantoms
-    enemies = sprites.all_of_kind(SpriteKind.enemy)
-
-    # no enemies = no shooting
-    if len(enemies) == 0:
-        return
-
-    # closest phantom
-    target = enemies[0]
-
-    closest_distance = 999999
-
-    for enemy in enemies:
-
-        distance = Math.sqrt(
-            (enemy.x - Ben_Clark.x) * (enemy.x - Ben_Clark.x) +
-            (enemy.y - Ben_Clark.y) * (enemy.y - Ben_Clark.y)
-        )
-
-        if distance < closest_distance:
-            closest_distance = distance
-            target = enemy
-
-    # create bullet
-    bullet = sprites.create(img("""
-        . . 5 5 . .
-        . 5 5 5 5 .
-        . . 5 5 . .
-    """), SpriteKind.bullet)
-
-    bullet.set_position(Ben_Clark.x, Ben_Clark.y)
-
-    # bullet auto follows closest phantom
-    bullet.follow(target, 200)
-
-    # delete bullet after time
-    bullet.lifespan = 2000
-
-
-# press A to shoot
-controller.A.on_event(
-    ControllerButtonEvent.PRESSED,
-    shoot
-)
-
-
 # =========================
 # BULLET KILLS PHANTOMS
 # =========================
-def on_bullet_hit(bullet, phantom):
 
+def on_on_overlap2(bullet2, phantom):
     sprites.destroy(phantom, effects.fire, 100)
-    sprites.destroy(bullet)
-
-sprites.on_overlap(
-    SpriteKind.bullet,
-    SpriteKind.enemy,
-    on_bullet_hit
-)
+    sprites.destroy(bullet2)
+sprites.on_overlap(SpriteKind.bullet, SpriteKind.enemy, on_on_overlap2)
 
 # =========================
 # SPAWN FUNCTION
@@ -114,8 +42,8 @@ def spawn_phantom():
         phantom2.set_position(x, y)
         overlap = False
         # Check enemy overlap
-        for enemy in sprites.all_of_kind(SpriteKind.enemy):
-            if enemy != phantom2 and phantom2.overlaps_with(enemy):
+        for enemy3 in sprites.all_of_kind(SpriteKind.enemy):
+            if enemy3 != phantom2 and phantom2.overlaps_with(enemy3):
                 overlap = True
         # Don't spawn on player
         if abs(phantom2.x - Ben_Clark.x) < 40 and abs(phantom2.y - Ben_Clark.y) < 40:
@@ -176,18 +104,65 @@ def on_right_pressed():
     direction = 1
 controller.right.on_event(ControllerButtonEvent.PRESSED, on_right_pressed)
 
+# =========================
+# AUTO AIM SHOOT
+# =========================
+def shoot():
+    global enemies, target, closest_distance, bullet22
+    # only works in level 2
+    if current_level != 2:
+        return
+    # find all phantoms
+    enemies = sprites.all_of_kind(SpriteKind.enemy)
+    # no enemies = no shooting
+    if len(enemies) == 0:
+        return
+    # closest phantom
+    target = enemies[0]
+    closest_distance = 999999
+    for enemy2 in enemies:
+        distance = Math.sqrt((enemy2.x - Ben_Clark.x) * (enemy2.x - Ben_Clark.x) + (enemy2.y - Ben_Clark.y) * (enemy2.y - Ben_Clark.y))
+        if distance < closest_distance:
+            closest_distance = distance
+            target = enemy2
+    # create bullet
+    bullet22 = sprites.create(img("""
+            . . 5 5 . .
+            . 5 5 5 5 .
+            . . 5 5 . .
+            """),
+        SpriteKind.bullet)
+    bullet22.set_position(Ben_Clark.x, Ben_Clark.y)
+    # bullet auto follows closest phantom
+    bullet22.follow(target, 200)
+    # delete bullet after time
+    bullet22.lifespan = 2000
+
 def on_down_pressed():
     global direction
     direction = 4
 controller.down.on_event(ControllerButtonEvent.PRESSED, on_down_pressed)
 
-def on_on_overlap2(sprite, otherSprite):
+def spawn_ammo_item():
+    global item2
+    item2 = sprites.create(img("""
+            . . . . 7 7 7 . . . .
+            . . 7 7 7 7 7 7 7 . .
+            . 7 7 7 7 7 7 7 7 7 .
+            . 7 7 7 7 7 7 7 7 7 .
+            . . 7 7 7 7 7 7 7 . .
+            . . . . 7 7 7 . . . .
+            """),
+        SpriteKind.food)
+    item2.set_position(randint(16, 300), randint(16, 300))
+
+def on_on_overlap3(sprite, otherSprite):
     # =========================
     # SPRITE TYPES
     # =========================
     info.change_life_by(1)
     sprites.destroy(otherSprite)
-sprites.on_overlap(SpriteKind.player, SpriteKind.food, on_on_overlap2)
+sprites.on_overlap(SpriteKind.player, SpriteKind.food, on_on_overlap3)
 
 def on_on_overlap(sprite2: Sprite, otherSprite2: Sprite):
     info.change_life_by(-1)
@@ -195,22 +170,33 @@ def on_on_overlap(sprite2: Sprite, otherSprite2: Sprite):
     pause(500)
 current_time3 = 0
 now = 0
+enemies2: List[Sprite] = []
+item2: Sprite = None
+bullet22: Sprite = None
+closest_distance = 0
+target: Sprite = None
 enemies: List[Sprite] = []
-item: Sprite = None
-phantom2: Sprite = None
-projectile2: Sprite = None
 direction = 0
+phantom2: Sprite = None
+ammo = 0
 last_spawn_time = 0
-current_level = 0
 spawn_quantity = 0
 spawn_cooldown = 0
 Ben_Clark: Sprite = None
-phantom = None
+current_level = 0
+Health = 0
 # =========================
 # ENEMY DAMAGE
 # =========================
 damage_cooldown = False
-Health = 0
+projectile2 = None
+item: Sprite = None
+# =========================
+# LEVEL TRACKER
+# =========================
+current_level = 1
+controller.A.on_event(ControllerButtonEvent.PRESSED, shoot)
+current_level = 0
 scene.set_background_color(2)
 # =========================
 # PLAYER
@@ -242,10 +228,10 @@ spawn_quantity = 1
 last_spawn_time = 0
 
 def on_on_update():
-    global enemies
-    enemies = sprites.all_of_kind(SpriteKind.enemy)
-    for a in enemies:
-        for b in enemies:
+    global enemies2
+    enemies2 = sprites.all_of_kind(SpriteKind.enemy)
+    for a in enemies2:
+        for b in enemies2:
             if a != b and a.overlaps_with(b):
                 if a.x < b.x:
                     a.x -= 2
@@ -312,63 +298,4 @@ def on_on_update4():
         last_spawn_time = current_time3
 game.on_update(on_on_update4)
 
-# =========================
-# AMMO SYSTEM
-# =========================
 
-ammo = 15
-MAX_AMMO = 15
-
-
-def spawn_ammo_item():
-    item = sprites.create(img("""
-        . . . . 7 7 7 . . . .
-        . . 7 7 7 7 7 7 7 . .
-        . 7 7 7 7 7 7 7 7 7 .
-        . 7 7 7 7 7 7 7 7 7 .
-        . . 7 7 7 7 7 7 7 . .
-        . . . . 7 7 7 . . . .
-    """), SpriteKind.food)
-
-    item.set_position(randint(16, 300), randint(16, 300))
-
-
-# spawn ammo randomly (less often than hearts)
-def ammo_spawn_loop():
-    if current_level == 2 and randint(0, 1500) < 1:
-        spawn_ammo_item()
-
-game.on_update(ammo_spawn_loop)
-
-
-# =========================
-# PICKUP AMMO
-# =========================
-
-def on_ammo_pickup(player, item):
-    global ammo
-
-    ammo = min(MAX_AMMO, ammo + 5)
-    sprites.destroy(item)
-
-sprites.on_overlap(SpriteKind.player, SpriteKind.food, on_ammo_pickup)
-
-
-# =========================
-# MODIFY SHOOT (ammo version wrapper)
-# =========================
-
-def shoot_with_ammo():
-    global ammo
-
-    if current_level != 2:
-        return
-
-    if ammo <= 0:
-        return
-
-    ammo -= 1
-    shoot()   # your ORIGINAL auto-aim function
-
-# override A button
-controller.A.on_event(ControllerButtonEvent.PRESSED, shoot_with_ammo)

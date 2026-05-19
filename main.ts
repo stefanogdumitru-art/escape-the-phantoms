@@ -1,64 +1,14 @@
-//  =========================
-//  SPRITE KINDS
-//  =========================
 namespace SpriteKind {
     export const enemy = SpriteKind.create()
     export const bullet = SpriteKind.create()
 }
 
 //  =========================
-//  LEVEL TRACKER
-//  =========================
-let current_level = 1
-//  =========================
-//  AUTO AIM SHOOT
-//  =========================
-function shoot() {
-    let distance: number;
-    //  only works in level 2
-    if (current_level != 2) {
-        return
-    }
-    
-    //  find all phantoms
-    let enemies = sprites.allOfKind(SpriteKind.enemy)
-    //  no enemies = no shooting
-    if (enemies.length == 0) {
-        return
-    }
-    
-    //  closest phantom
-    let target = enemies[0]
-    let closest_distance = 999999
-    for (let enemy of enemies) {
-        distance = Math.sqrt((enemy.x - Ben_Clark.x) * (enemy.x - Ben_Clark.x) + (enemy.y - Ben_Clark.y) * (enemy.y - Ben_Clark.y))
-        if (distance < closest_distance) {
-            closest_distance = distance
-            target = enemy
-        }
-        
-    }
-    //  create bullet
-    let bullet = sprites.create(img`
-        . . 5 5 . .
-        . 5 5 5 5 .
-        . . 5 5 . .
-    `, SpriteKind.bullet)
-    bullet.setPosition(Ben_Clark.x, Ben_Clark.y)
-    //  bullet auto follows closest phantom
-    bullet.follow(target, 200)
-    //  delete bullet after time
-    bullet.lifespan = 2000
-}
-
-//  press A to shoot
-controller.A.onEvent(ControllerButtonEvent.Pressed, shoot)
-//  =========================
 //  BULLET KILLS PHANTOMS
 //  =========================
-sprites.onOverlap(SpriteKind.bullet, SpriteKind.enemy, function on_bullet_hit(bullet: Sprite, phantom: Sprite) {
+sprites.onOverlap(SpriteKind.bullet, SpriteKind.enemy, function on_on_overlap2(bullet2: Sprite, phantom: Sprite) {
     sprites.destroy(phantom, effects.fire, 100)
-    sprites.destroy(bullet)
+    sprites.destroy(bullet2)
 })
 //  =========================
 //  SPAWN FUNCTION
@@ -93,8 +43,8 @@ function spawn_phantom() {
         phantom2.setPosition(x, y)
         overlap = false
         //  Check enemy overlap
-        for (let enemy of sprites.allOfKind(SpriteKind.enemy)) {
-            if (enemy != phantom2 && phantom2.overlapsWith(enemy)) {
+        for (let enemy3 of sprites.allOfKind(SpriteKind.enemy)) {
+            if (enemy3 != phantom2 && phantom2.overlapsWith(enemy3)) {
                 overlap = true
             }
             
@@ -163,11 +113,27 @@ controller.right.onEvent(ControllerButtonEvent.Pressed, function on_right_presse
     
     direction = 1
 })
+//  =========================
+//  AUTO AIM SHOOT
+//  =========================
 controller.down.onEvent(ControllerButtonEvent.Pressed, function on_down_pressed() {
     
     direction = 4
 })
-sprites.onOverlap(SpriteKind.Player, SpriteKind.Food, function on_on_overlap2(sprite: Sprite, otherSprite: Sprite) {
+function spawn_ammo_item() {
+    
+    item2 = sprites.create(img`
+            . . . . 7 7 7 . . . .
+            . . 7 7 7 7 7 7 7 . .
+            . 7 7 7 7 7 7 7 7 7 .
+            . 7 7 7 7 7 7 7 7 7 .
+            . . 7 7 7 7 7 7 7 . .
+            . . . . 7 7 7 . . . .
+            `, SpriteKind.Food)
+    item2.setPosition(randint(16, 300), randint(16, 300))
+}
+
+sprites.onOverlap(SpriteKind.Player, SpriteKind.Food, function on_on_overlap3(sprite: Sprite, otherSprite: Sprite) {
     //  =========================
     //  SPRITE TYPES
     //  =========================
@@ -182,22 +148,70 @@ function on_on_overlap(sprite2: Sprite, otherSprite2: Sprite) {
 
 let current_time3 = 0
 let now = 0
+let enemies2 : Sprite[] = []
+let item2 : Sprite = null
+let bullet22 : Sprite = null
+let closest_distance = 0
+let target : Sprite = null
 let enemies : Sprite[] = []
-let item : Sprite = null
-let phantom2 : Sprite = null
-let projectile2 : Sprite = null
 let direction = 0
+let phantom2 : Sprite = null
+let ammo = 0
 let last_spawn_time = 0
-current_level = 0
 let spawn_quantity = 0
 let spawn_cooldown = 0
 let Ben_Clark : Sprite = null
-let phantom = null
+let current_level = 0
+let Health = 0
 //  =========================
 //  ENEMY DAMAGE
 //  =========================
 let damage_cooldown = false
-let Health = 0
+let projectile2 = null
+let item : Sprite = null
+//  =========================
+//  LEVEL TRACKER
+//  =========================
+current_level = 1
+controller.A.onEvent(ControllerButtonEvent.Pressed, function shoot() {
+    let distance: number;
+    
+    //  only works in level 2
+    if (current_level != 2) {
+        return
+    }
+    
+    //  find all phantoms
+    enemies = sprites.allOfKind(SpriteKind.enemy)
+    //  no enemies = no shooting
+    if (enemies.length == 0) {
+        return
+    }
+    
+    //  closest phantom
+    target = enemies[0]
+    closest_distance = 999999
+    for (let enemy2 of enemies) {
+        distance = Math.sqrt((enemy2.x - Ben_Clark.x) * (enemy2.x - Ben_Clark.x) + (enemy2.y - Ben_Clark.y) * (enemy2.y - Ben_Clark.y))
+        if (distance < closest_distance) {
+            closest_distance = distance
+            target = enemy2
+        }
+        
+    }
+    //  create bullet
+    bullet22 = sprites.create(img`
+            . . 5 5 . .
+            . 5 5 5 5 .
+            . . 5 5 . .
+            `, SpriteKind.bullet)
+    bullet22.setPosition(Ben_Clark.x, Ben_Clark.y)
+    //  bullet auto follows closest phantom
+    bullet22.follow(target, 200)
+    //  delete bullet after time
+    bullet22.lifespan = 2000
+})
+current_level = 0
 scene.setBackgroundColor(2)
 //  =========================
 //  PLAYER
@@ -229,9 +243,9 @@ spawn_quantity = 1
 last_spawn_time = 0
 game.onUpdate(function on_on_update() {
     
-    enemies = sprites.allOfKind(SpriteKind.enemy)
-    for (let a of enemies) {
-        for (let b of enemies) {
+    enemies2 = sprites.allOfKind(SpriteKind.enemy)
+    for (let a of enemies2) {
+        for (let b of enemies2) {
             if (a != b && a.overlapsWith(b)) {
                 if (a.x < b.x) {
                     a.x -= 2
@@ -312,54 +326,4 @@ game.onUpdate(function on_on_update4() {
         last_spawn_time = current_time3
     }
     
-})
-//  =========================
-//  AMMO SYSTEM
-//  =========================
-let ammo = 15
-let MAX_AMMO = 15
-function spawn_ammo_item() {
-    let item = sprites.create(img`
-        . . . . 7 7 7 . . . .
-        . . 7 7 7 7 7 7 7 . .
-        . 7 7 7 7 7 7 7 7 7 .
-        . 7 7 7 7 7 7 7 7 7 .
-        . . 7 7 7 7 7 7 7 . .
-        . . . . 7 7 7 . . . .
-    `, SpriteKind.Food)
-    item.setPosition(randint(16, 300), randint(16, 300))
-}
-
-//  spawn ammo randomly (less often than hearts)
-game.onUpdate(function ammo_spawn_loop() {
-    if (current_level == 2 && randint(0, 1500) < 1) {
-        spawn_ammo_item()
-    }
-    
-})
-//  =========================
-//  PICKUP AMMO
-//  =========================
-sprites.onOverlap(SpriteKind.Player, SpriteKind.Food, function on_ammo_pickup(player: Sprite, item: Sprite) {
-    
-    ammo = Math.min(MAX_AMMO, ammo + 5)
-    sprites.destroy(item)
-})
-//  =========================
-//  MODIFY SHOOT (ammo version wrapper)
-//  =========================
-//  your ORIGINAL auto-aim function
-//  override A button
-controller.A.onEvent(ControllerButtonEvent.Pressed, function shoot_with_ammo() {
-    
-    if (current_level != 2) {
-        return
-    }
-    
-    if (ammo <= 0) {
-        return
-    }
-    
-    ammo -= 1
-    shoot()
 })
