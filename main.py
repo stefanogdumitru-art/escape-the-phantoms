@@ -3,9 +3,6 @@
 # =========================
 # SPRITE KINDS
 # =========================
-# =========================
-# SPRITE KINDS
-# =========================
 class SpriteKind:
     enemy = SpriteKind.create()
     bullet = SpriteKind.create()
@@ -85,73 +82,6 @@ sprites.on_overlap(
     SpriteKind.enemy,
     on_bullet_hit
 )
-
-# =========================
-# SPRITE KINDS
-# =========================
-class SpriteKind:
-    ammo = SpriteKind.create()
-
-
-# =========================
-# AMMO VARIABLE
-# =========================
-ammo = 10
-
-info.set_score(ammo)
-
-
-# =========================
-# SPAWN AMMO ITEM
-# =========================
-def spawn_ammo_item():
-
-    item = sprites.create(img("""
-        . . . 5 5 . . .
-        . . 5 5 5 5 . .
-        . 5 5 5 5 5 5 .
-        . 5 5 . . 5 5 .
-        . 5 5 . . 5 5 .
-        . 5 5 5 5 5 5 .
-        . . 5 5 5 5 . .
-        . . . 5 5 . . .
-    """), SpriteKind.ammo)
-
-    item.set_position(
-        randint(16, tiles.tilemap_current().columns() * 16 - 16),
-        randint(16, tiles.tilemap_current().rows() * 16 - 16)
-    )
-
-
-# =========================
-# PICK UP AMMO
-# =========================
-def on_ammo_overlap(player, item):
-    global ammo
-
-    ammo += 5
-
-    info.set_score(ammo)
-
-    sprites.destroy(item, effects.hearts, 100)
-
-sprites.on_overlap(
-    SpriteKind.player,
-    SpriteKind.ammo,
-    on_ammo_overlap
-)
-
-
-# =========================
-# RANDOM AMMO SPAWNING
-# =========================
-def ammo_update():
-
-    # rare spawn chance
-    if randint(0, 1200) < 2:
-        spawn_ammo_item()
-
-game.on_update(ammo_update)
 
 # =========================
 # SPAWN FUNCTION
@@ -381,3 +311,47 @@ def on_on_update4():
             spawn_phantom()
         last_spawn_time = current_time3
 game.on_update(on_on_update4)
+
+def shoot():
+
+    global ammo
+
+    # level 2 only
+    if current_level != 2:
+        return
+
+    # ammo check
+    if ammo <= 0:
+        return
+
+    ammo -= 1
+
+    enemies = sprites.all_of_kind(SpriteKind.enemy)
+    if len(enemies) == 0:
+        return
+
+    # find closest enemy
+    target = enemies[0]
+    closest_distance = 999999
+
+    for enemy in enemies:
+
+        distance = Math.sqrt(
+            (enemy.x - Ben_Clark.x) * (enemy.x - Ben_Clark.x) +
+            (enemy.y - Ben_Clark.y) * (enemy.y - Ben_Clark.y)
+        )
+
+        if distance < closest_distance:
+            closest_distance = distance
+            target = enemy
+
+    # create bullet
+    bullet = sprites.create(img("""
+        . . 5 5 . .
+        . 5 5 5 5 .
+        . . 5 5 . .
+    """), SpriteKind.bullet)
+
+    bullet.set_position(Ben_Clark.x, Ben_Clark.y)
+    bullet.follow(target, 200)
+    bullet.lifespan = 2000

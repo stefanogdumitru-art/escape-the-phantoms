@@ -1,9 +1,6 @@
 //  =========================
 //  SPRITE KINDS
 //  =========================
-//  =========================
-//  SPRITE KINDS
-//  =========================
 namespace SpriteKind {
     export const enemy = SpriteKind.create()
     export const bullet = SpriteKind.create()
@@ -19,8 +16,8 @@ let current_level = 1
 //  press A to shoot
 controller.A.onEvent(ControllerButtonEvent.Pressed, function shoot() {
     let distance: number;
-    //  only works in level 2
-    if (current_level != 2) {
+    //  only works in level 1
+    if (current_level != 1) {
         return
     }
     
@@ -60,92 +57,6 @@ controller.A.onEvent(ControllerButtonEvent.Pressed, function shoot() {
 sprites.onOverlap(SpriteKind.bullet, SpriteKind.enemy, function on_bullet_hit(bullet: Sprite, phantom: Sprite) {
     sprites.destroy(phantom, effects.fire, 100)
     sprites.destroy(bullet)
-})
-//  =========================
-//  SPRITE KINDS
-//  =========================
-class SpriteKind {
-    static bullet: number
-    private ___bullet_is_set: boolean
-    private ___bullet: number
-    get bullet(): number {
-        return this.___bullet_is_set ? this.___bullet : SpriteKind.bullet
-    }
-    set bullet(value: number) {
-        this.___bullet_is_set = true
-        this.___bullet = value
-    }
-    
-    static ammo: number
-    private ___ammo_is_set: boolean
-    private ___ammo: number
-    get ammo(): number {
-        return this.___ammo_is_set ? this.___ammo : SpriteKind.ammo
-    }
-    set ammo(value: number) {
-        this.___ammo_is_set = true
-        this.___ammo = value
-    }
-    
-    static enemy: number
-    private ___enemy_is_set: boolean
-    private ___enemy: number
-    get enemy(): number {
-        return this.___enemy_is_set ? this.___enemy : SpriteKind.enemy
-    }
-    set enemy(value: number) {
-        this.___enemy_is_set = true
-        this.___enemy = value
-    }
-    
-    public static __initSpriteKind() {
-        SpriteKind.ammo = SpriteKind.create()
-    }
-    
-}
-
-SpriteKind.__initSpriteKind()
-
-//  =========================
-//  AMMO VARIABLE
-//  =========================
-let ammo = 10
-info.setScore(ammo)
-//  =========================
-//  SPAWN AMMO ITEM
-//  =========================
-function spawn_ammo_item() {
-    let item = sprites.create(img`
-        . . . 5 5 . . .
-        . . 5 5 5 5 . .
-        . 5 5 5 5 5 5 .
-        . 5 5 . . 5 5 .
-        . 5 5 . . 5 5 .
-        . 5 5 5 5 5 5 .
-        . . 5 5 5 5 . .
-        . . . 5 5 . . .
-    `, SpriteKind.ammo)
-    item.setPosition(randint(16, 32 * 16 - 16), randint(16, 16 * 16 - 16))
-}
-
-//  =========================
-//  PICK UP AMMO
-//  =========================
-sprites.onOverlap(SpriteKind.Player, SpriteKind.ammo, function on_ammo_overlap(player: Sprite, item: Sprite) {
-    
-    ammo += 5
-    info.setScore(ammo)
-    sprites.destroy(item, effects.hearts, 100)
-})
-//  =========================
-//  RANDOM AMMO SPAWNING
-//  =========================
-game.onUpdate(function ammo_update() {
-    //  rare spawn chance
-    if (randint(0, 1200) < 2) {
-        spawn_ammo_item()
-    }
-    
 })
 //  =========================
 //  SPAWN FUNCTION
@@ -399,4 +310,41 @@ game.onUpdate(function on_on_update4() {
         last_spawn_time = current_time3
     }
     
+})
+let ammo = 15
+let max_ammo = 15
+let ammo_item = SpriteKind.create()
+function set_ammo(value: number) {
+    
+    ammo = value
+}
+
+if (ammo <= 0) {
+    return
+}
+
+ammo -= 1
+function spawn_ammo_item() {
+    let item = sprites.create(img`
+        . . . . 8 8 8 . . . .
+        . . 8 8 8 8 8 8 8 . .
+        . 8 8 . 8 8 8 . 8 8 .
+        . 8 8 8 8 8 8 8 8 8 .
+        . 8 8 . 8 8 8 . 8 8 .
+        . . 8 8 8 8 8 8 8 . .
+        . . . . 8 8 8 . . . .
+    `, SpriteKind.ammo_item)
+    item.setPosition(randint(16, 300), randint(16, 300))
+}
+
+game.onUpdate(function on_on_update_ammo() {
+    if (randint(0, 900) < 1) {
+        spawn_ammo_item()
+    }
+    
+})
+sprites.onOverlap(SpriteKind.Player, SpriteKind.ammo_item, function on_ammo_overlap(player: Sprite, item: Sprite) {
+    
+    ammo = Math.min(max_ammo, ammo + 5)
+    sprites.destroy(item)
 })
