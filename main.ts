@@ -1,99 +1,151 @@
+//  =========================
+//  SPRITE KINDS
+//  =========================
+//  =========================
+//  SPRITE KINDS
+//  =========================
 namespace SpriteKind {
-    export const p = SpriteKind.create()
+    export const enemy = SpriteKind.create()
+    export const bullet = SpriteKind.create()
 }
 
-/** ========================= */
-/** VARIABLES */
 //  =========================
-controller.up.onEvent(ControllerButtonEvent.Pressed, function on_up_pressed() {
-    
-    direction = 3
-})
-controller.A.onEvent(ControllerButtonEvent.Pressed, function on_a_pressed() {
-    let projectile_sprite: Sprite;
-    let projectile = 0
-    if (projectile == 1) {
-        projectile_sprite = sprites.createProjectileFromSprite(img`
-                . . . . . . . . . . . . . . . .
-                . . . . . . . . . . . . . . . .
-                . . . . . . . . . . . . . . . .
-                . . . . . . . . . . . . . . . .
-                . . . . . . . . . . . . . . . .
-                . . . . . . . . . . . . . . . .
-                . . . . . . f f f . . . . . . .
-                . . . . . f f f f f . . . . . .
-                . . . . . f f f f f . . . . . .
-                . . . . . f f f f f . . . . . .
-                . . . . . . f f f . . . . . . .
-                . . . . . . . . . . . . . . . .
-                . . . . . . . . . . . . . . . .
-                . . . . . . . . . . . . . . . .
-                . . . . . . . . . . . . . . . .
-                . . . . . . . . . . . . . . . .
-                `, Ben_Clark, 500, 0)
-    } else if (projectile == 2) {
-        projectile_sprite = sprites.createProjectileFromSprite(img`
-                . . . . . . . . . . . . . . . .
-                . . . . . . . . . . . . . . . .
-                . . . . . . . . . . . . . . . .
-                . . . . . . . . . . . . . . . .
-                . . . . . . . . . . . . . . . .
-                . . . . . . . . . . . . . . . .
-                . . . . . . f f f . . . . . . .
-                . . . . . f f f f f . . . . . .
-                . . . . . f f f f f . . . . . .
-                . . . . . f f f f f . . . . . .
-                . . . . . . f f f . . . . . . .
-                . . . . . . . . . . . . . . . .
-                . . . . . . . . . . . . . . . .
-                . . . . . . . . . . . . . . . .
-                . . . . . . . . . . . . . . . .
-                . . . . . . . . . . . . . . . .
-                `, Ben_Clark, -500, 0)
-    } else if (projectile == 3) {
-        projectile_sprite = sprites.createProjectileFromSprite(img`
-                . . . . . . . . . . . . . . . .
-                . . . . . . . . . . . . . . . .
-                . . . . . . . . . . . . . . . .
-                . . . . . . . . . . . . . . . .
-                . . . . . . . . . . . . . . . .
-                . . . . . . . . . . . . . . . .
-                . . . . . . f f f . . . . . . .
-                . . . . . f f f f f . . . . . .
-                . . . . . f f f f f . . . . . .
-                . . . . . f f f f f . . . . . .
-                . . . . . . f f f . . . . . . .
-                . . . . . . . . . . . . . . . .
-                . . . . . . . . . . . . . . . .
-                . . . . . . . . . . . . . . . .
-                . . . . . . . . . . . . . . . .
-                . . . . . . . . . . . . . . . .
-                `, Ben_Clark, 0, 500)
-    } else if (projectile == 4) {
-        projectile_sprite = sprites.createProjectileFromSprite(img`
-                . . . . . . . . . . . . . . . .
-                . . . . . . . . . . . . . . . .
-                . . . . . . . . . . . . . . . .
-                . . . . . . . . . . . . . . . .
-                . . . . . . . . . . . . . . . .
-                . . . . . . . . . . . . . . . .
-                . . . . . . f f f . . . . . . .
-                . . . . . f f f f f . . . . . .
-                . . . . . f f f f f . . . . . .
-                . . . . . f f f f f . . . . . .
-                . . . . . . f f f . . . . . . .
-                . . . . . . . . . . . . . . . .
-                . . . . . . . . . . . . . . . .
-                . . . . . . . . . . . . . . . .
-                . . . . . . . . . . . . . . . .
-                . . . . . . . . . . . . . . . .
-                `, Ben_Clark, 0, -500)
+//  LEVEL TRACKER
+//  =========================
+let current_level = 1
+//  =========================
+//  AUTO AIM SHOOT
+//  =========================
+//  press A to shoot
+controller.A.onEvent(ControllerButtonEvent.Pressed, function shoot() {
+    let distance: number;
+    //  only works in level 2
+    if (current_level != 2) {
+        return
     }
     
-})
-controller.left.onEvent(ControllerButtonEvent.Pressed, function on_left_pressed() {
+    //  find all phantoms
+    let enemies = sprites.allOfKind(SpriteKind.enemy)
+    //  no enemies = no shooting
+    if (enemies.length == 0) {
+        return
+    }
     
-    direction = 2
+    //  closest phantom
+    let target = enemies[0]
+    let closest_distance = 999999
+    for (let enemy of enemies) {
+        distance = Math.sqrt((enemy.x - Ben_Clark.x) * (enemy.x - Ben_Clark.x) + (enemy.y - Ben_Clark.y) * (enemy.y - Ben_Clark.y))
+        if (distance < closest_distance) {
+            closest_distance = distance
+            target = enemy
+        }
+        
+    }
+    //  create bullet
+    let bullet = sprites.create(img`
+        . . 5 5 . .
+        . 5 5 5 5 .
+        . . 5 5 . .
+    `, SpriteKind.bullet)
+    bullet.setPosition(Ben_Clark.x, Ben_Clark.y)
+    //  bullet auto follows closest phantom
+    bullet.follow(target, 200)
+    //  delete bullet after time
+    bullet.lifespan = 2000
+})
+//  =========================
+//  BULLET KILLS PHANTOMS
+//  =========================
+sprites.onOverlap(SpriteKind.bullet, SpriteKind.enemy, function on_bullet_hit(bullet: Sprite, phantom: Sprite) {
+    sprites.destroy(phantom, effects.fire, 100)
+    sprites.destroy(bullet)
+})
+//  =========================
+//  SPRITE KINDS
+//  =========================
+class SpriteKind {
+    static bullet: number
+    private ___bullet_is_set: boolean
+    private ___bullet: number
+    get bullet(): number {
+        return this.___bullet_is_set ? this.___bullet : SpriteKind.bullet
+    }
+    set bullet(value: number) {
+        this.___bullet_is_set = true
+        this.___bullet = value
+    }
+    
+    static ammo: number
+    private ___ammo_is_set: boolean
+    private ___ammo: number
+    get ammo(): number {
+        return this.___ammo_is_set ? this.___ammo : SpriteKind.ammo
+    }
+    set ammo(value: number) {
+        this.___ammo_is_set = true
+        this.___ammo = value
+    }
+    
+    static enemy: number
+    private ___enemy_is_set: boolean
+    private ___enemy: number
+    get enemy(): number {
+        return this.___enemy_is_set ? this.___enemy : SpriteKind.enemy
+    }
+    set enemy(value: number) {
+        this.___enemy_is_set = true
+        this.___enemy = value
+    }
+    
+    public static __initSpriteKind() {
+        SpriteKind.ammo = SpriteKind.create()
+    }
+    
+}
+
+SpriteKind.__initSpriteKind()
+
+//  =========================
+//  AMMO VARIABLE
+//  =========================
+let ammo = 10
+info.setScore(ammo)
+//  =========================
+//  SPAWN AMMO ITEM
+//  =========================
+function spawn_ammo_item() {
+    let item = sprites.create(img`
+        . . . 5 5 . . .
+        . . 5 5 5 5 . .
+        . 5 5 5 5 5 5 .
+        . 5 5 . . 5 5 .
+        . 5 5 . . 5 5 .
+        . 5 5 5 5 5 5 .
+        . . 5 5 5 5 . .
+        . . . 5 5 . . .
+    `, SpriteKind.ammo)
+    item.setPosition(randint(16, 32 * 16 - 16), randint(16, 16 * 16 - 16))
+}
+
+//  =========================
+//  PICK UP AMMO
+//  =========================
+sprites.onOverlap(SpriteKind.Player, SpriteKind.ammo, function on_ammo_overlap(player: Sprite, item: Sprite) {
+    
+    ammo += 5
+    info.setScore(ammo)
+    sprites.destroy(item, effects.hearts, 100)
+})
+//  =========================
+//  RANDOM AMMO SPAWNING
+//  =========================
+game.onUpdate(function ammo_update() {
+    //  rare spawn chance
+    if (randint(0, 1200) < 2) {
+        spawn_ammo_item()
+    }
+    
 })
 //  =========================
 //  SPAWN FUNCTION
@@ -120,7 +172,7 @@ function spawn_phantom() {
             . . f f f f f f f f f f f f . .
             . . . . . f f f f f f . . . . .
             . . . . . f f . . f f . . . . .
-            `, SpriteKind.Enemy)
+            `, SpriteKind.enemy)
     //  Try 20 random positions
     for (let index = 0; index < 20; index++) {
         x = randint(16, 300)
@@ -128,7 +180,7 @@ function spawn_phantom() {
         phantom2.setPosition(x, y)
         overlap = false
         //  Check enemy overlap
-        for (let enemy of sprites.allOfKind(SpriteKind.Enemy)) {
+        for (let enemy of sprites.allOfKind(SpriteKind.enemy)) {
             if (enemy != phantom2 && phantom2.overlapsWith(enemy)) {
                 overlap = true
             }
@@ -161,7 +213,7 @@ info.onCountdownEnd(function on_countdown_end() {
         `)
     Ben_Clark.setPosition(30, 135)
     //  clear enemies
-    for (let e of sprites.allOfKind(SpriteKind.Enemy)) {
+    for (let e of sprites.allOfKind(SpriteKind.enemy)) {
         sprites.destroy(e, effects.spray, 500)
     }
     //  restart timer + spawn system
@@ -220,9 +272,10 @@ let now = 0
 let enemies : Sprite[] = []
 let item : Sprite = null
 let phantom2 : Sprite = null
+let projectile2 : Sprite = null
 let direction = 0
 let last_spawn_time = 0
-let current_level = 0
+current_level = 0
 let spawn_quantity = 0
 let spawn_cooldown = 0
 let Ben_Clark : Sprite = null
@@ -247,8 +300,8 @@ tiles.setCurrentTilemap(tilemap`
 info.startCountdown(60)
 info.setLife(5)
 Ben_Clark.setPosition(30, 135)
-sprites.onOverlap(SpriteKind.Player, SpriteKind.Enemy, on_on_overlap)
-sprites.onOverlap(SpriteKind.Player, SpriteKind.Enemy, on_on_overlap)
+sprites.onOverlap(SpriteKind.Player, SpriteKind.enemy, on_on_overlap)
+sprites.onOverlap(SpriteKind.Player, SpriteKind.enemy, on_on_overlap)
 //  =========================
 //  SPAWN SETTINGS
 //  =========================
@@ -263,7 +316,7 @@ spawn_quantity = 1
 last_spawn_time = 0
 game.onUpdate(function on_on_update() {
     
-    enemies = sprites.allOfKind(SpriteKind.Enemy)
+    enemies = sprites.allOfKind(SpriteKind.enemy)
     for (let a of enemies) {
         for (let b of enemies) {
             if (a != b && a.overlapsWith(b)) {

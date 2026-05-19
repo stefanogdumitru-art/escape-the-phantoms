@@ -1,119 +1,157 @@
 @namespace
-class SpriteKind:
-    p = SpriteKind.create()
-"""
 
-=========================
-
-"""
-"""
-
-VARIABLES
-
-"""
 # =========================
+# SPRITE KINDS
+# =========================
+# =========================
+# SPRITE KINDS
+# =========================
+class SpriteKind:
+    enemy = SpriteKind.create()
+    bullet = SpriteKind.create()
 
-def on_up_pressed():
-    global direction
-    direction = 3
-controller.up.on_event(ControllerButtonEvent.PRESSED, on_up_pressed)
 
-def on_a_pressed():
-    projectile = 0
-    if projectile == 1:
-        projectile_sprite = sprites.create_projectile_from_sprite(img("""
-                . . . . . . . . . . . . . . . .
-                . . . . . . . . . . . . . . . .
-                . . . . . . . . . . . . . . . .
-                . . . . . . . . . . . . . . . .
-                . . . . . . . . . . . . . . . .
-                . . . . . . . . . . . . . . . .
-                . . . . . . f f f . . . . . . .
-                . . . . . f f f f f . . . . . .
-                . . . . . f f f f f . . . . . .
-                . . . . . f f f f f . . . . . .
-                . . . . . . f f f . . . . . . .
-                . . . . . . . . . . . . . . . .
-                . . . . . . . . . . . . . . . .
-                . . . . . . . . . . . . . . . .
-                . . . . . . . . . . . . . . . .
-                . . . . . . . . . . . . . . . .
-                """),
-            Ben_Clark,
-            500,
-            0)
-    elif projectile == 2:
-        projectile_sprite = sprites.create_projectile_from_sprite(img("""
-                . . . . . . . . . . . . . . . .
-                . . . . . . . . . . . . . . . .
-                . . . . . . . . . . . . . . . .
-                . . . . . . . . . . . . . . . .
-                . . . . . . . . . . . . . . . .
-                . . . . . . . . . . . . . . . .
-                . . . . . . f f f . . . . . . .
-                . . . . . f f f f f . . . . . .
-                . . . . . f f f f f . . . . . .
-                . . . . . f f f f f . . . . . .
-                . . . . . . f f f . . . . . . .
-                . . . . . . . . . . . . . . . .
-                . . . . . . . . . . . . . . . .
-                . . . . . . . . . . . . . . . .
-                . . . . . . . . . . . . . . . .
-                . . . . . . . . . . . . . . . .
-                """),
-            Ben_Clark,
-            -500,
-            0)
-    elif projectile == 3:
-        projectile_sprite = sprites.create_projectile_from_sprite(img("""
-                . . . . . . . . . . . . . . . .
-                . . . . . . . . . . . . . . . .
-                . . . . . . . . . . . . . . . .
-                . . . . . . . . . . . . . . . .
-                . . . . . . . . . . . . . . . .
-                . . . . . . . . . . . . . . . .
-                . . . . . . f f f . . . . . . .
-                . . . . . f f f f f . . . . . .
-                . . . . . f f f f f . . . . . .
-                . . . . . f f f f f . . . . . .
-                . . . . . . f f f . . . . . . .
-                . . . . . . . . . . . . . . . .
-                . . . . . . . . . . . . . . . .
-                . . . . . . . . . . . . . . . .
-                . . . . . . . . . . . . . . . .
-                . . . . . . . . . . . . . . . .
-                """),
-            Ben_Clark,
-            0,
-            500)
-    elif projectile == 4:
-        projectile_sprite = sprites.create_projectile_from_sprite(img("""
-                . . . . . . . . . . . . . . . .
-                . . . . . . . . . . . . . . . .
-                . . . . . . . . . . . . . . . .
-                . . . . . . . . . . . . . . . .
-                . . . . . . . . . . . . . . . .
-                . . . . . . . . . . . . . . . .
-                . . . . . . f f f . . . . . . .
-                . . . . . f f f f f . . . . . .
-                . . . . . f f f f f . . . . . .
-                . . . . . f f f f f . . . . . .
-                . . . . . . f f f . . . . . . .
-                . . . . . . . . . . . . . . . .
-                . . . . . . . . . . . . . . . .
-                . . . . . . . . . . . . . . . .
-                . . . . . . . . . . . . . . . .
-                . . . . . . . . . . . . . . . .
-                """),
-            Ben_Clark,
-            0,
-            -500)
-controller.A.on_event(ControllerButtonEvent.PRESSED, on_a_pressed)
+# =========================
+# LEVEL TRACKER
+# =========================
+current_level = 1
 
-def on_left_pressed():
-    global direction
-    direction = 2
-controller.left.on_event(ControllerButtonEvent.PRESSED, on_left_pressed)
+
+# =========================
+# AUTO AIM SHOOT
+# =========================
+def shoot():
+
+    # only works in level 2
+    if current_level != 2:
+        return
+
+    # find all phantoms
+    enemies = sprites.all_of_kind(SpriteKind.enemy)
+
+    # no enemies = no shooting
+    if len(enemies) == 0:
+        return
+
+    # closest phantom
+    target = enemies[0]
+
+    closest_distance = 999999
+
+    for enemy in enemies:
+
+        distance = Math.sqrt(
+            (enemy.x - Ben_Clark.x) * (enemy.x - Ben_Clark.x) +
+            (enemy.y - Ben_Clark.y) * (enemy.y - Ben_Clark.y)
+        )
+
+        if distance < closest_distance:
+            closest_distance = distance
+            target = enemy
+
+    # create bullet
+    bullet = sprites.create(img("""
+        . . 5 5 . .
+        . 5 5 5 5 .
+        . . 5 5 . .
+    """), SpriteKind.bullet)
+
+    bullet.set_position(Ben_Clark.x, Ben_Clark.y)
+
+    # bullet auto follows closest phantom
+    bullet.follow(target, 200)
+
+    # delete bullet after time
+    bullet.lifespan = 2000
+
+
+# press A to shoot
+controller.A.on_event(
+    ControllerButtonEvent.PRESSED,
+    shoot
+)
+
+
+# =========================
+# BULLET KILLS PHANTOMS
+# =========================
+def on_bullet_hit(bullet, phantom):
+
+    sprites.destroy(phantom, effects.fire, 100)
+    sprites.destroy(bullet)
+
+sprites.on_overlap(
+    SpriteKind.bullet,
+    SpriteKind.enemy,
+    on_bullet_hit
+)
+
+# =========================
+# SPRITE KINDS
+# =========================
+class SpriteKind:
+    ammo = SpriteKind.create()
+
+
+# =========================
+# AMMO VARIABLE
+# =========================
+ammo = 10
+
+info.set_score(ammo)
+
+
+# =========================
+# SPAWN AMMO ITEM
+# =========================
+def spawn_ammo_item():
+
+    item = sprites.create(img("""
+        . . . 5 5 . . .
+        . . 5 5 5 5 . .
+        . 5 5 5 5 5 5 .
+        . 5 5 . . 5 5 .
+        . 5 5 . . 5 5 .
+        . 5 5 5 5 5 5 .
+        . . 5 5 5 5 . .
+        . . . 5 5 . . .
+    """), SpriteKind.ammo)
+
+    item.set_position(
+        randint(16, tiles.tilemap_current().columns() * 16 - 16),
+        randint(16, tiles.tilemap_current().rows() * 16 - 16)
+    )
+
+
+# =========================
+# PICK UP AMMO
+# =========================
+def on_ammo_overlap(player, item):
+    global ammo
+
+    ammo += 5
+
+    info.set_score(ammo)
+
+    sprites.destroy(item, effects.hearts, 100)
+
+sprites.on_overlap(
+    SpriteKind.player,
+    SpriteKind.ammo,
+    on_ammo_overlap
+)
+
+
+# =========================
+# RANDOM AMMO SPAWNING
+# =========================
+def ammo_update():
+
+    # rare spawn chance
+    if randint(0, 1200) < 2:
+        spawn_ammo_item()
+
+game.on_update(ammo_update)
 
 # =========================
 # SPAWN FUNCTION
@@ -230,6 +268,7 @@ now = 0
 enemies: List[Sprite] = []
 item: Sprite = None
 phantom2: Sprite = None
+projectile2: Sprite = None
 direction = 0
 last_spawn_time = 0
 current_level = 0
