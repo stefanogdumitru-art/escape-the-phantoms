@@ -11,11 +11,7 @@ class SpriteKind:
 VARIABLES
 
 """
-"""
-
-=========================
-
-"""
+# =========================
 
 def on_up_pressed():
     global direction
@@ -23,9 +19,9 @@ def on_up_pressed():
 controller.up.on_event(ControllerButtonEvent.PRESSED, on_up_pressed)
 
 def on_a_pressed():
-    global projectile
+    projectile = 0
     if projectile == 1:
-        projectile = sprites.create_projectile_from_sprite(img("""
+        projectile_sprite = sprites.create_projectile_from_sprite(img("""
                 . . . . . . . . . . . . . . . .
                 . . . . . . . . . . . . . . . .
                 . . . . . . . . . . . . . . . .
@@ -47,7 +43,7 @@ def on_a_pressed():
             500,
             0)
     elif projectile == 2:
-        projectile = sprites.create_projectile_from_sprite(img("""
+        projectile_sprite = sprites.create_projectile_from_sprite(img("""
                 . . . . . . . . . . . . . . . .
                 . . . . . . . . . . . . . . . .
                 . . . . . . . . . . . . . . . .
@@ -69,7 +65,7 @@ def on_a_pressed():
             -500,
             0)
     elif projectile == 3:
-        projectile = sprites.create_projectile_from_sprite(img("""
+        projectile_sprite = sprites.create_projectile_from_sprite(img("""
                 . . . . . . . . . . . . . . . .
                 . . . . . . . . . . . . . . . .
                 . . . . . . . . . . . . . . . .
@@ -91,7 +87,7 @@ def on_a_pressed():
             0,
             500)
     elif projectile == 4:
-        projectile = sprites.create_projectile_from_sprite(img("""
+        projectile_sprite = sprites.create_projectile_from_sprite(img("""
                 . . . . . . . . . . . . . . . .
                 . . . . . . . . . . . . . . . .
                 . . . . . . . . . . . . . . . .
@@ -234,19 +230,18 @@ now = 0
 enemies: List[Sprite] = []
 item: Sprite = None
 phantom2: Sprite = None
-projectile = 0
 direction = 0
 last_spawn_time = 0
 current_level = 0
 spawn_quantity = 0
 spawn_cooldown = 0
 Ben_Clark: Sprite = None
-Health = 0
+phantom = None
 # =========================
 # ENEMY DAMAGE
 # =========================
 damage_cooldown = False
-phantom = None
+Health = 0
 scene.set_background_color(2)
 # =========================
 # PLAYER
