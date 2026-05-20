@@ -2,18 +2,8 @@
 class SpriteKind:
     enemy = SpriteKind.create()
     bullet = SpriteKind.create()
-# =========================
-# PLAY ANIMATIONS
-# =========================
-# =========================
-# STOP ANIMATION
-# =========================
 def stop_anim():
     animation.stop_animation(animation.AnimationTypes.ALL, Ben_Clark)
-
-def on_up_pressed():
-    animation.run_image_animation(Ben_Clark, up_frames, 100, True)
-controller.up.on_event(ControllerButtonEvent.PRESSED, on_up_pressed)
 
 def on_a_pressed():
     global enemies, target, closest_distance, bullet22
@@ -46,139 +36,10 @@ def on_a_pressed():
     # delete bullet after time
     bullet22.lifespan = 2000
 controller.A.on_event(ControllerButtonEvent.PRESSED, on_a_pressed)
-
-def on_down_released():
-    animation.run_image_animation(Ben_Clark,
-        [img("""
-                . . . . e e e e . . . . .
-                . . e e e e e e e e . . .
-                . e e e e e e e e e e . .
-                e e e e e e e e e e e e .
-                e e e e e e e e e e e e .
-                e e e e e e d d e e e e .
-                e e e f f d d f f e e e .
-                e e e b f d d f b e e e .
-                . f d 1 f d d f 1 d f . .
-                . f d d d d d d d d f . .
-                . f f f d d d d f f f . .
-                f b f b b b b b b f b f .
-                d d f b b b b b b f d d .
-                d d f b b b b b b f d d .
-                . . . f f f f f f . . . .
-                . . . f f . . f f . . . .
-                """),
-            img("""
-                . . . . . . . . . . . . .
-                . . . . . e e e e . . . .
-                . . . e e e e e e e e . .
-                . . e e e e e e e e e e .
-                e e e e e e e e e e e e e
-                e e e e e e e e e e e e e
-                . e e e e e e d d e e e e
-                . e e e f f d d f f e e e
-                . e e e b f d d f b e e e
-                . e e d 1 f d d f 1 d e e
-                . . f d d d d d d d d f e
-                . f b f b b b b f d d d f
-                . d d f b b b b f d d f .
-                . . . f b b b b b f f . .
-                . . . f f f f f f f . . .
-                . . . f f f . . . . . . .
-                """),
-            img("""
-                . . . . . . . . . . . . .
-                . . . . e e e e . . . . .
-                . . e e e e e e e e . . .
-                . e e e e e e e e e e . .
-                e e e e e e e e e e e e e
-                e e e e e e e e e e e e e
-                e e e e d d e e e e e e .
-                e e e f f d d f f e e e .
-                e e e b f d d f b e e e .
-                e e d 1 f d d f 1 d e e .
-                e f d d d d d d d d f . .
-                f d d d f b b b b f b f .
-                . f d d f b b b b f d d .
-                . . f f b b b b b f . . .
-                . . . f f f f f f f . . .
-                . . . . . . . f f f . . .
-                """)],
-        100,
-        True)
-controller.down.on_event(ControllerButtonEvent.RELEASED, on_down_released)
-
-def on_left_pressed():
-    animation.run_image_animation(Ben_Clark, left_frames, 100, True)
-controller.left.on_event(ControllerButtonEvent.PRESSED, on_left_pressed)
-
-# =========================
-# BULLET KILLS PHANTOMS
-# =========================
-
 def on_on_overlap2(bullet2, phantom):
     sprites.destroy(phantom, effects.fire, 100)
     sprites.destroy(bullet2)
 sprites.on_overlap(SpriteKind.bullet, SpriteKind.enemy, on_on_overlap2)
-
-def on_right_released():
-    animation.run_image_animation(Ben_Clark,
-        [img("""
-                . . . . . . . . . . . . .
-                . . . e e e e e e . . . .
-                . e e e e e e e e e . . .
-                . e e e e e e e e e e . .
-                e e e e e e e e e e e e .
-                e e e e e e e e e e e e e
-                e e e e e e e d e e e e e
-                e e e e e f f d d e e e .
-                e f d d e b f d d e e e .
-                e f d d d 1 f d d e e . .
-                . f f f d d d d d f . . .
-                . f b b b b b b b f . . .
-                . f d d b b b b b f . . .
-                . f d d f b b b b f f . .
-                . f f f f f f f f f f . .
-                . . f f . . . f f f . . .
-                """),
-            img("""
-                . . . . . . . . . . . . .
-                . . . e e e e e e . . . .
-                . e e e e e e e e e . . .
-                . e e e e e e e e e e . .
-                e e e e e e e e e e e e .
-                e e e e e e e e e e e e e
-                e e e e e e e d e e e e e
-                e e e e e f f d d e e e .
-                e f d d d b f d d e e . .
-                . f d d d 1 f d d e e . .
-                . f f f d d d d d f . . .
-                . . f b b b b b b f . . .
-                . . f b d d b b b f . . .
-                . f f f d d f b b f f . .
-                . f f f f f f f f f f . .
-                . . f f . . . f f f . . .
-                """),
-            img("""
-                . . . e e e e e . . . . .
-                . e e e e e e e e e . . .
-                . e e e e e e e e e e . .
-                e e e e e e e e e e e . .
-                e e e e e e e e e e e e e
-                e e e e e e e d e e e e e
-                e e e e e f f d d e e e .
-                e f d d e b f d d e e . .
-                . f d d d 1 f d d f . . .
-                . f f f d d d d d f . . .
-                . . f b b b b b b f . . .
-                . . b d d b b b b f . . .
-                . . b d d b b b b f . . .
-                . . f b b f b b b f . . .
-                . . . f f f f f f . . . .
-                . . . . f f f . . . . . .
-                """)],
-        100,
-        True)
-controller.right.on_event(ControllerButtonEvent.RELEASED, on_right_released)
 
 # =========================
 # SPAWN FUNCTION
@@ -223,70 +84,9 @@ def spawn_phantom():
     # Chase player
     phantom2.follow(Ben_Clark, 40)
 
-def on_left_released():
-    animation.run_image_animation(Ben_Clark,
-        [img("""
-                . . . . . . . . . . . . .
-                . . . . e e e e e e . . .
-                . . . e e e e e e e e e .
-                . . e e e e e e e e e e .
-                . e e e e e e e e e e e e
-                e e e e e e e e e e e e e
-                e e e e e d e e e e e e e
-                . e e e d d f f e e e e e
-                . e e e d d f b e d d f e
-                . . e e d d f 1 d d d f e
-                . . . f d d d d d f f f .
-                . . . f b b b b b b b f .
-                . . . f b b b b b d d f .
-                . . f f b b b b f d d f .
-                . . f f f f f f f f f f .
-                . . . f f f . . . f f . .
-                """),
-            img("""
-                . . . . . . . . . . . . .
-                . . . . e e e e e e . . .
-                . . . e e e e e e e e e .
-                . . e e e e e e e e e e .
-                . e e e e e e e e e e e e
-                e e e e e e e e e e e e e
-                e e e e e d e e e e e e e
-                . e e e d d f f e e e e e
-                . . e e d d f b d d d f e
-                . . e e d d f 1 d d d f .
-                . . . f d d d d d f f f .
-                . . . f b b b b b b f . .
-                . . . f b b b d d b f . .
-                . . f f b b f d d f f f .
-                . . f f f f f f f f f f .
-                . . . f f f . . . f f . .
-                """),
-            img("""
-                . . . . . e e e e e . . .
-                . . . e e e e e e e e e .
-                . . e e e e e e e e e e .
-                . . e e e e e e e e e e e
-                e e e e e e e e e e e e e
-                e e e e e d e e e e e e e
-                . e e e d d f f e e e e e
-                . . e e d d f b e d d f e
-                . . . f d d f 1 d d d f .
-                . . . f d d d d d f f f .
-                . . . f b b b b b b f . .
-                . . . f b b b b d d b . .
-                . . . f b b b b d d b . .
-                . . . f b b b f b b f . .
-                . . . . f f f f f f . . .
-                . . . . . . f f f . . . .
-                """)],
-        100,
-        True)
-controller.left.on_event(ControllerButtonEvent.RELEASED, on_left_released)
-
 # =========================
 # LEVEL TRANSITION
 # =========================
-# slower baseline in level 2
 
 def on_countdown_end():
     global current_level, last_spawn_time, spawn_quantity, spawn_cooldown
@@ -334,66 +134,6 @@ def on_right_pressed():
     direction = 1
 controller.right.on_event(ControllerButtonEvent.PRESSED, on_right_pressed)
 
-def on_up_released():
-    animation.run_image_animation(Ben_Clark,
-        [img("""
-                . . . . e e e e . . . . .
-                . . e e e e e e e e . . .
-                . e e e e e e e e e e . .
-                e e e e e e e e e e e e .
-                e e e e e e e e e e e e .
-                e e e e e e e e e e e e .
-                e e e e e e e e e e e e .
-                e e e e e e e e e e e e .
-                e e e e e e e e e e e e .
-                . e e e e e e e e e e . .
-                . e e e e e e e e e e . .
-                b b e e e e e e e e b b .
-                d d b b b b b b b b d d .
-                d d b b b b b b b b d d .
-                . . . f f f f f f . . . .
-                . . . f f . . f f . . . .
-                """),
-            img("""
-                . . . . . . . . . . . . .
-                . . . . . e e e e . . . .
-                . . . e e e e e e e e . .
-                . e e e e e e e e e e e .
-                e e e e e e e e e e e e e
-                e e e e e e e e e e e e e
-                . e e e e e e e e e e e e
-                . e e e e e e e e e e e e
-                . e e e e e e e e e e e e
-                . e e e e e e e e e e e e
-                . . e e e e e e e e e e .
-                . . d e e e e e e e e e .
-                . . d e e e e e e e e d d
-                . . d b b b b b b b d d d
-                . . d f f f f f f f d d .
-                . . . f f f . . . . . . .
-                """),
-            img("""
-                . . . . . . . . . . . . .
-                . . . . e e e e . . . . .
-                . . e e e e e e e e . . .
-                . e e e e e e e e e e e .
-                e e e e e e e e e e e e e
-                e e e e e e e e e e e e e
-                e e e e e e e e e e e e .
-                e e e e e e e e e e e e .
-                e e e e e e e e e e e e .
-                e e e e e e e e e e e e .
-                . e e e e e e e e e e . .
-                . e e e e e e e e e d . .
-                d d e e e e e e e e d . .
-                d d d b b b b b b b d . .
-                . d d f f f f f f f d . .
-                . . . . . . . f f f . . .
-                """)],
-        100,
-        True)
-controller.up.on_event(ControllerButtonEvent.RELEASED, on_up_released)
-
 # =========================
 # AUTO AIM SHOOT
 # =========================
@@ -403,23 +143,7 @@ def on_down_pressed():
     direction = 4
 controller.down.on_event(ControllerButtonEvent.PRESSED, on_down_pressed)
 
-def spawn_ammo_item():
-    global item2
-    item2 = sprites.create(img("""
-            . . . . 7 7 7 . . . .
-            . . 7 7 7 7 7 7 7 . .
-            . 7 7 7 7 7 7 7 7 7 .
-            . 7 7 7 7 7 7 7 7 7 .
-            . . 7 7 7 7 7 7 7 . .
-            . . . . 7 7 7 . . . .
-            """),
-        SpriteKind.food)
-    item2.set_position(randint(16, 300), randint(16, 300))
-
 def on_on_overlap3(sprite, otherSprite):
-    # =========================
-    # SPRITE TYPES
-    # =========================
     info.change_life_by(1)
     sprites.destroy(otherSprite)
 sprites.on_overlap(SpriteKind.player, SpriteKind.food, on_on_overlap3)
@@ -439,26 +163,11 @@ bullet22: Sprite = None
 closest_distance = 0
 target: Sprite = None
 enemies: List[Sprite] = []
-up_frames: List[Image] = []
-left_frames: List[Image] = []
 last_spawn_time = 0
 spawn_quantity = 0
 spawn_cooldown = 0
-Ben_Clark: Sprite = None
 current_level = 0
-projectile2 = None
-# =========================
-# ENEMY DAMAGE
-# =========================
-damage_cooldown = False
-Health = 0
-ammo = 0
-# =========================
-# LEVEL TRACKER
-# =========================
-current_level = 1
-current_level = 0
-scene.set_background_color(2)
+
 # =========================
 # PLAYER
 # =========================
@@ -475,22 +184,19 @@ info.set_life(5)
 Ben_Clark.set_position(30, 135)
 sprites.on_overlap(SpriteKind.player, SpriteKind.enemy, on_on_overlap)
 sprites.on_overlap(SpriteKind.player, SpriteKind.enemy, on_on_overlap)
+
 # =========================
 # SPAWN SETTINGS
 # =========================
 spawn_cooldown = 5000
 spawn_quantity = 1
+
 # =========================
-# LEVEL TRACKER
+# WALK ANIMATIONS
 # =========================
-current_level = 1
-spawn_cooldown = 2000
-spawn_quantity = 1
-last_spawn_time = 0
-# =========================
-# DOWN ANIMATION
-# =========================
-down_frames = [img("""
+
+down_frames = [
+img("""
     . . . . . f f f f . . . . .
     . . . f f e e e e f f . . .
     . . f e e e e e e e e f . .
@@ -506,10 +212,13 @@ down_frames = [img("""
     . f b f b b b b b b f b f .
     f d d f b b b b b b f d d f
     f d d f b b b b b b f d d f
-    . f f . f f f f f f . f f .
+    . f f f f f f f f f f f f .
     . . . . f f . . f f . . . .
-    """)]
-right_frames = [img("""
+""")
+]
+
+right_frames = [
+img("""
     . . . . f f f f f f . . . . .
     . . f f e e e e e e f . . . .
     . f e e e e e e e e e f . . .
@@ -523,11 +232,14 @@ right_frames = [img("""
     . f f f f d d d d d f f . . .
     . . f b b b b b b b f . . . .
     . . f d d b b b b b f . . . .
-    . . f d d f b b b b f f . . .
+    . . f d d b b b b b f f . . .
     . . f f f f f f f f f f . . .
     . . . f f . . . f f f . . . .
-    """)]
-left_frames = [img("""
+""")
+]
+
+left_frames = [
+img("""
     . . . . . f f f f f f . . . .
     . . . f f e e e e e e f . . .
     . . f e e e e e e e e e f . .
@@ -541,11 +253,14 @@ left_frames = [img("""
     . . . f f d d d d d f f f f .
     . . . . f b b b b b b b f . .
     . . . . f b b b b b d d f . .
-    . . . f f b b b b f d d f . .
+    . . . f f b b b b b d d f . .
     . . . f f f f f f f f f f . .
     . . . . f f f . . . f f . . .
-    """)]
-up_frames = [img("""
+""")
+]
+
+up_frames = [
+img("""
     . . . . . f f f f . . . . .
     . . . f f e e e e f f . . .
     . . f e e e e e e e e f . .
@@ -563,7 +278,53 @@ up_frames = [img("""
     f d d b b b b b b b b d d f
     . f f f f f f f f f f f f .
     . . . . f f . . f f . . . .
-    """)]
+""")
+]
+
+# =========================
+# PLAY ONLY WHEN PRESSED
+# =========================
+
+def play_down():
+    animation.run_image_animation(
+        Ben_Clark,
+        down_frames,
+        120,
+        True
+    )
+controller.down.on_event(ControllerButtonEvent.PRESSED, play_down)
+
+def play_up():
+    animation.run_image_animation(
+        Ben_Clark,
+        up_frames,
+        120,
+        True
+    )
+controller.up.on_event(ControllerButtonEvent.PRESSED, play_up)
+
+def play_left():
+    animation.run_image_animation(
+        Ben_Clark,
+        left_frames,
+        120,
+        True
+    )
+controller.left.on_event(ControllerButtonEvent.PRESSED, play_left)
+
+def play_right():
+    animation.run_image_animation(
+        Ben_Clark,
+        right_frames,
+        120,
+        True
+    )
+controller.right.on_event(ControllerButtonEvent.PRESSED, play_right)
+
+# =========================
+# STOP ANIMATION WHEN RELEASED
+# =========================
+
 controller.down.on_event(ControllerButtonEvent.RELEASED, stop_anim)
 controller.up.on_event(ControllerButtonEvent.RELEASED, stop_anim)
 controller.left.on_event(ControllerButtonEvent.RELEASED, stop_anim)

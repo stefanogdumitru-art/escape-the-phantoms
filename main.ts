@@ -3,19 +3,10 @@ namespace SpriteKind {
     export const bullet = SpriteKind.create()
 }
 
-//  =========================
-//  PLAY ANIMATIONS
-//  =========================
-//  =========================
-//  STOP ANIMATION
-//  =========================
 function stop_anim() {
     animation.stopAnimation(animation.AnimationTypes.All, Ben_Clark)
 }
 
-controller.up.onEvent(ControllerButtonEvent.Pressed, function on_up_pressed() {
-    animation.runImageAnimation(Ben_Clark, up_frames, 100, true)
-})
 controller.A.onEvent(ControllerButtonEvent.Pressed, function on_a_pressed() {
     let distance: number;
     
@@ -54,123 +45,9 @@ controller.A.onEvent(ControllerButtonEvent.Pressed, function on_a_pressed() {
     //  delete bullet after time
     bullet22.lifespan = 2000
 })
-controller.down.onEvent(ControllerButtonEvent.Released, function on_down_released() {
-    animation.runImageAnimation(Ben_Clark, [img`
-                . . . . e e e e . . . . .
-                . . e e e e e e e e . . .
-                . e e e e e e e e e e . .
-                e e e e e e e e e e e e .
-                e e e e e e e e e e e e .
-                e e e e e e d d e e e e .
-                e e e f f d d f f e e e .
-                e e e b f d d f b e e e .
-                . f d 1 f d d f 1 d f . .
-                . f d d d d d d d d f . .
-                . f f f d d d d f f f . .
-                f b f b b b b b b f b f .
-                d d f b b b b b b f d d .
-                d d f b b b b b b f d d .
-                . . . f f f f f f . . . .
-                . . . f f . . f f . . . .
-                `, img`
-                . . . . . . . . . . . . .
-                . . . . . e e e e . . . .
-                . . . e e e e e e e e . .
-                . . e e e e e e e e e e .
-                e e e e e e e e e e e e e
-                e e e e e e e e e e e e e
-                . e e e e e e d d e e e e
-                . e e e f f d d f f e e e
-                . e e e b f d d f b e e e
-                . e e d 1 f d d f 1 d e e
-                . . f d d d d d d d d f e
-                . f b f b b b b f d d d f
-                . d d f b b b b f d d f .
-                . . . f b b b b b f f . .
-                . . . f f f f f f f . . .
-                . . . f f f . . . . . . .
-                `, img`
-                . . . . . . . . . . . . .
-                . . . . e e e e . . . . .
-                . . e e e e e e e e . . .
-                . e e e e e e e e e e . .
-                e e e e e e e e e e e e e
-                e e e e e e e e e e e e e
-                e e e e d d e e e e e e .
-                e e e f f d d f f e e e .
-                e e e b f d d f b e e e .
-                e e d 1 f d d f 1 d e e .
-                e f d d d d d d d d f . .
-                f d d d f b b b b f b f .
-                . f d d f b b b b f d d .
-                . . f f b b b b b f . . .
-                . . . f f f f f f f . . .
-                . . . . . . . f f f . . .
-                `], 100, true)
-})
-controller.left.onEvent(ControllerButtonEvent.Pressed, function on_left_pressed() {
-    animation.runImageAnimation(Ben_Clark, left_frames, 100, true)
-})
-//  =========================
-//  BULLET KILLS PHANTOMS
-//  =========================
 sprites.onOverlap(SpriteKind.bullet, SpriteKind.enemy, function on_on_overlap2(bullet2: Sprite, phantom: Sprite) {
     sprites.destroy(phantom, effects.fire, 100)
     sprites.destroy(bullet2)
-})
-controller.right.onEvent(ControllerButtonEvent.Released, function on_right_released() {
-    animation.runImageAnimation(Ben_Clark, [img`
-                . . . . . . . . . . . . .
-                . . . e e e e e e . . . .
-                . e e e e e e e e e . . .
-                . e e e e e e e e e e . .
-                e e e e e e e e e e e e .
-                e e e e e e e e e e e e e
-                e e e e e e e d e e e e e
-                e e e e e f f d d e e e .
-                e f d d e b f d d e e e .
-                e f d d d 1 f d d e e . .
-                . f f f d d d d d f . . .
-                . f b b b b b b b f . . .
-                . f d d b b b b b f . . .
-                . f d d f b b b b f f . .
-                . f f f f f f f f f f . .
-                . . f f . . . f f f . . .
-                `, img`
-                . . . . . . . . . . . . .
-                . . . e e e e e e . . . .
-                . e e e e e e e e e . . .
-                . e e e e e e e e e e . .
-                e e e e e e e e e e e e .
-                e e e e e e e e e e e e e
-                e e e e e e e d e e e e e
-                e e e e e f f d d e e e .
-                e f d d d b f d d e e . .
-                . f d d d 1 f d d e e . .
-                . f f f d d d d d f . . .
-                . . f b b b b b b f . . .
-                . . f b d d b b b f . . .
-                . f f f d d f b b f f . .
-                . f f f f f f f f f f . .
-                . . f f . . . f f f . . .
-                `, img`
-                . . . e e e e e . . . . .
-                . e e e e e e e e e . . .
-                . e e e e e e e e e e . .
-                e e e e e e e e e e e . .
-                e e e e e e e e e e e e e
-                e e e e e e e d e e e e e
-                e e e e e f f d d e e e .
-                e f d d e b f d d e e . .
-                . f d d d 1 f d d f . . .
-                . f f f d d d d d f . . .
-                . . f b b b b b b f . . .
-                . . b d d b b b b f . . .
-                . . b d d b b b b f . . .
-                . . f b b f b b b f . . .
-                . . . f f f f f f . . . .
-                . . . . f f f . . . . . .
-                `], 100, true)
 })
 //  =========================
 //  SPAWN FUNCTION
@@ -226,64 +103,9 @@ function spawn_phantom() {
     phantom2.follow(Ben_Clark, 40)
 }
 
-controller.left.onEvent(ControllerButtonEvent.Released, function on_left_released() {
-    animation.runImageAnimation(Ben_Clark, [img`
-                . . . . . . . . . . . . .
-                . . . . e e e e e e . . .
-                . . . e e e e e e e e e .
-                . . e e e e e e e e e e .
-                . e e e e e e e e e e e e
-                e e e e e e e e e e e e e
-                e e e e e d e e e e e e e
-                . e e e d d f f e e e e e
-                . e e e d d f b e d d f e
-                . . e e d d f 1 d d d f e
-                . . . f d d d d d f f f .
-                . . . f b b b b b b b f .
-                . . . f b b b b b d d f .
-                . . f f b b b b f d d f .
-                . . f f f f f f f f f f .
-                . . . f f f . . . f f . .
-                `, img`
-                . . . . . . . . . . . . .
-                . . . . e e e e e e . . .
-                . . . e e e e e e e e e .
-                . . e e e e e e e e e e .
-                . e e e e e e e e e e e e
-                e e e e e e e e e e e e e
-                e e e e e d e e e e e e e
-                . e e e d d f f e e e e e
-                . . e e d d f b d d d f e
-                . . e e d d f 1 d d d f .
-                . . . f d d d d d f f f .
-                . . . f b b b b b b f . .
-                . . . f b b b d d b f . .
-                . . f f b b f d d f f f .
-                . . f f f f f f f f f f .
-                . . . f f f . . . f f . .
-                `, img`
-                . . . . . e e e e e . . .
-                . . . e e e e e e e e e .
-                . . e e e e e e e e e e .
-                . . e e e e e e e e e e e
-                e e e e e e e e e e e e e
-                e e e e e d e e e e e e e
-                . e e e d d f f e e e e e
-                . . e e d d f b e d d f e
-                . . . f d d f 1 d d d f .
-                . . . f d d d d d f f f .
-                . . . f b b b b b b f . .
-                . . . f b b b b d d b . .
-                . . . f b b b b d d b . .
-                . . . f b b b f b b f . .
-                . . . . f f f f f f . . .
-                . . . . . . f f f . . . .
-                `], 100, true)
-})
 //  =========================
 //  LEVEL TRANSITION
 //  =========================
-//  slower baseline in level 2
 info.onCountdownEnd(function on_countdown_end() {
     
     current_level = 2
@@ -329,60 +151,6 @@ controller.right.onEvent(ControllerButtonEvent.Pressed, function on_right_presse
     
     direction = 1
 })
-controller.up.onEvent(ControllerButtonEvent.Released, function on_up_released() {
-    animation.runImageAnimation(Ben_Clark, [img`
-                . . . . e e e e . . . . .
-                . . e e e e e e e e . . .
-                . e e e e e e e e e e . .
-                e e e e e e e e e e e e .
-                e e e e e e e e e e e e .
-                e e e e e e e e e e e e .
-                e e e e e e e e e e e e .
-                e e e e e e e e e e e e .
-                e e e e e e e e e e e e .
-                . e e e e e e e e e e . .
-                . e e e e e e e e e e . .
-                b b e e e e e e e e b b .
-                d d b b b b b b b b d d .
-                d d b b b b b b b b d d .
-                . . . f f f f f f . . . .
-                . . . f f . . f f . . . .
-                `, img`
-                . . . . . . . . . . . . .
-                . . . . . e e e e . . . .
-                . . . e e e e e e e e . .
-                . e e e e e e e e e e e .
-                e e e e e e e e e e e e e
-                e e e e e e e e e e e e e
-                . e e e e e e e e e e e e
-                . e e e e e e e e e e e e
-                . e e e e e e e e e e e e
-                . e e e e e e e e e e e e
-                . . e e e e e e e e e e .
-                . . d e e e e e e e e e .
-                . . d e e e e e e e e d d
-                . . d b b b b b b b d d d
-                . . d f f f f f f f d d .
-                . . . f f f . . . . . . .
-                `, img`
-                . . . . . . . . . . . . .
-                . . . . e e e e . . . . .
-                . . e e e e e e e e . . .
-                . e e e e e e e e e e e .
-                e e e e e e e e e e e e e
-                e e e e e e e e e e e e e
-                e e e e e e e e e e e e .
-                e e e e e e e e e e e e .
-                e e e e e e e e e e e e .
-                e e e e e e e e e e e e .
-                . e e e e e e e e e e . .
-                . e e e e e e e e e d . .
-                d d e e e e e e e e d . .
-                d d d b b b b b b b d . .
-                . d d f f f f f f f d . .
-                . . . . . . . f f f . . .
-                `], 100, true)
-})
 //  =========================
 //  AUTO AIM SHOOT
 //  =========================
@@ -390,23 +158,7 @@ controller.down.onEvent(ControllerButtonEvent.Pressed, function on_down_pressed(
     
     direction = 4
 })
-function spawn_ammo_item() {
-    
-    item2 = sprites.create(img`
-            . . . . 7 7 7 . . . .
-            . . 7 7 7 7 7 7 7 . .
-            . 7 7 7 7 7 7 7 7 7 .
-            . 7 7 7 7 7 7 7 7 7 .
-            . . 7 7 7 7 7 7 7 . .
-            . . . . 7 7 7 . . . .
-            `, SpriteKind.Food)
-    item2.setPosition(randint(16, 300), randint(16, 300))
-}
-
 sprites.onOverlap(SpriteKind.Player, SpriteKind.Food, function on_on_overlap3(sprite: Sprite, otherSprite: Sprite) {
-    //  =========================
-    //  SPRITE TYPES
-    //  =========================
     info.changeLifeBy(1)
     sprites.destroy(otherSprite)
 })
@@ -427,30 +179,14 @@ let bullet22 : Sprite = null
 let closest_distance = 0
 let target : Sprite = null
 let enemies : Sprite[] = []
-let up_frames : Image[] = []
-let left_frames : Image[] = []
 let last_spawn_time = 0
 let spawn_quantity = 0
 let spawn_cooldown = 0
-let Ben_Clark : Sprite = null
 let current_level = 0
-let projectile2 = null
-//  =========================
-//  ENEMY DAMAGE
-//  =========================
-let damage_cooldown = false
-let Health = 0
-let ammo = 0
-//  =========================
-//  LEVEL TRACKER
-//  =========================
-current_level = 1
-current_level = 0
-scene.setBackgroundColor(2)
 //  =========================
 //  PLAYER
 //  =========================
-Ben_Clark = sprites.create(assets.image`
+let Ben_Clark = sprites.create(assets.image`
     Ben Clark
     `, SpriteKind.Player)
 controller.moveSprite(Ben_Clark, 150, 150)
@@ -469,14 +205,7 @@ sprites.onOverlap(SpriteKind.Player, SpriteKind.enemy, on_on_overlap)
 spawn_cooldown = 5000
 spawn_quantity = 1
 //  =========================
-//  LEVEL TRACKER
-//  =========================
-current_level = 1
-spawn_cooldown = 2000
-spawn_quantity = 1
-last_spawn_time = 0
-//  =========================
-//  DOWN ANIMATION
+//  WALK ANIMATIONS
 //  =========================
 let down_frames = [img`
     . . . . . f f f f . . . . .
@@ -494,9 +223,9 @@ let down_frames = [img`
     . f b f b b b b b b f b f .
     f d d f b b b b b b f d d f
     f d d f b b b b b b f d d f
-    . f f . f f f f f f . f f .
+    . f f f f f f f f f f f f .
     . . . . f f . . f f . . . .
-    `]
+`]
 let right_frames = [img`
     . . . . f f f f f f . . . . .
     . . f f e e e e e e f . . . .
@@ -511,11 +240,11 @@ let right_frames = [img`
     . f f f f d d d d d f f . . .
     . . f b b b b b b b f . . . .
     . . f d d b b b b b f . . . .
-    . . f d d f b b b b f f . . .
+    . . f d d b b b b b f f . . .
     . . f f f f f f f f f f . . .
     . . . f f . . . f f f . . . .
-    `]
-left_frames = [img`
+`]
+let left_frames = [img`
     . . . . . f f f f f f . . . .
     . . . f f e e e e e e f . . .
     . . f e e e e e e e e e f . .
@@ -529,11 +258,11 @@ left_frames = [img`
     . . . f f d d d d d f f f f .
     . . . . f b b b b b b b f . .
     . . . . f b b b b b d d f . .
-    . . . f f b b b b f d d f . .
+    . . . f f b b b b b d d f . .
     . . . f f f f f f f f f f . .
     . . . . f f f . . . f f . . .
-    `]
-up_frames = [img`
+`]
+let up_frames = [img`
     . . . . . f f f f . . . . .
     . . . f f e e e e f f . . .
     . . f e e e e e e e e f . .
@@ -551,7 +280,25 @@ up_frames = [img`
     f d d b b b b b b b b d d f
     . f f f f f f f f f f f f .
     . . . . f f . . f f . . . .
-    `]
+`]
+//  =========================
+//  PLAY ONLY WHEN PRESSED
+//  =========================
+controller.down.onEvent(ControllerButtonEvent.Pressed, function play_down() {
+    animation.runImageAnimation(Ben_Clark, down_frames, 120, true)
+})
+controller.up.onEvent(ControllerButtonEvent.Pressed, function play_up() {
+    animation.runImageAnimation(Ben_Clark, up_frames, 120, true)
+})
+controller.left.onEvent(ControllerButtonEvent.Pressed, function play_left() {
+    animation.runImageAnimation(Ben_Clark, left_frames, 120, true)
+})
+controller.right.onEvent(ControllerButtonEvent.Pressed, function play_right() {
+    animation.runImageAnimation(Ben_Clark, right_frames, 120, true)
+})
+//  =========================
+//  STOP ANIMATION WHEN RELEASED
+//  =========================
 controller.down.onEvent(ControllerButtonEvent.Released, stop_anim)
 controller.up.onEvent(ControllerButtonEvent.Released, stop_anim)
 controller.left.onEvent(ControllerButtonEvent.Released, stop_anim)
