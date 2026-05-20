@@ -444,15 +444,15 @@ left_frames: List[Image] = []
 last_spawn_time = 0
 spawn_quantity = 0
 spawn_cooldown = 0
+Ben_Clark: Sprite = None
 current_level = 0
-ammo = 0
-Health = 0
+projectile2 = None
 # =========================
 # ENEMY DAMAGE
 # =========================
 damage_cooldown = False
-projectile2 = None
-Ben_Clark: Sprite = None
+Health = 0
+ammo = 0
 # =========================
 # LEVEL TRACKER
 # =========================
@@ -491,74 +491,78 @@ last_spawn_time = 0
 # DOWN ANIMATION
 # =========================
 down_frames = [img("""
-    . . . . e e e e . . . . .
-    . . e e e e e e e e . . .
-    . e e e e e e e e e e . .
-    e e e e e e e e e e e e .
-    e e e e e e e e e e e e .
-    e e e e e e d d e e e e .
-    e e e f f d d f f e e e .
-    e e e b f d d f b e e e .
-    . f d 1 f d d f 1 d f . .
-    . f d d d d d d d d f . .
-    . f f f d d d d f f f . .
-    f b f b b b b b b f b f .
-    d d f b b b b b b f d d .
-    d d f b b b b b b f d d .
-    . . . f f f f f f . . . .
-    . . . f f . . f f . . . .
+    . . . . . f f f f . . . . .
+    . . . f f e e e e f f . . .
+    . . f e e e e e e e e f . .
+    . f e e e e e e e e e e f .
+    f e e e e e e e e e e e e f
+    f e e e e e e e e e e e e f
+    f e e e e e e d d e e e e f
+    f e e e f f d d f f e e e f
+    f e e e b f d d f b e e e f
+    . f f d 1 f d d f 1 d f f .
+    . . f d d d d d d d d f . .
+    . . f f f d d d d f f f . .
+    . f b f b b b b b b f b f .
+    f d d f b b b b b b f d d f
+    f d d f b b b b b b f d d f
+    . f f . f f f f f f . f f .
+    . . . . f f . . f f . . . .
     """)]
 right_frames = [img("""
-    . . . e e e e e e . . . .
-    . e e e e e e e e e . . .
-    . e e e e e e e e e e . .
-    e e e e e e e e e e e e .
-    e e e e e e e e e e e e e
-    e e e e e e e d e e e e e
-    e e e e e f f d d e e e .
-    e f d d e b f d d e e e .
-    e f d d d 1 f d d e e . .
-    . f f f d d d d d f . . .
-    . f b b b b b b b f . . .
-    . f d d b b b b b f . . .
-    . f d d f b b b b f f . .
-    . f f f f f f f f f f . .
-    . . f f . . . f f f . . .
+    . . . . f f f f f f . . . . .
+    . . f f e e e e e e f . . . .
+    . f e e e e e e e e e f . . .
+    . f e e e e e e e e e e f . .
+    f e e e e e e e e e e e e f .
+    f e e e e e e e e e e e e e f
+    f e e e e e e e d e e e e e f
+    f e e e e e f f d d e e e f .
+    f e f d d e b f d d e e e f .
+    f e f d d d 1 f d d e e f . .
+    . f f f f d d d d d f f . . .
+    . . f b b b b b b b f . . . .
+    . . f d d b b b b b f . . . .
+    . . f d d f b b b b f f . . .
+    . . f f f f f f f f f f . . .
+    . . . f f . . . f f f . . . .
     """)]
 left_frames = [img("""
-    . . . . e e e e e e . . .
-    . . e e e e e e e e e . .
-    . e e e e e e e e e e . .
-    e e e e e e e e e e e e .
-    e e e e e e e e e e e e e
-    e e e e e d e e e e e e e
-    . e e e d d f f e e e e e
-    . e e e d d f b e d d f e
-    . . e e d d f 1 d d d f e
-    . . . f d d d d d f f f .
-    . . . f b b b b b b b f .
-    . . . f b b b b b d d f .
-    . . f f b b b b f d d f .
-    . . f f f f f f f f f f .
-    . . . f f f . . . f f . .
+    . . . . . f f f f f f . . . .
+    . . . f f e e e e e e f . . .
+    . . f e e e e e e e e e f . .
+    . f e e e e e e e e e e f . .
+    f e e e e e e e e e e e e f .
+    f e e e e e e e e e e e e e f
+    f e e e e e d e e e e e e e f
+    . f e e e d d f f e e e e e f
+    . f e e e d d f b e d d f e f
+    . . f e e d d f 1 d d d f e f
+    . . . f f d d d d d f f f f .
+    . . . . f b b b b b b b f . .
+    . . . . f b b b b b d d f . .
+    . . . f f b b b b f d d f . .
+    . . . f f f f f f f f f f . .
+    . . . . f f f . . . f f . . .
     """)]
 up_frames = [img("""
-    . . . . e e e e . . . . .
-    . . e e e e e e e e . . .
-    . e e e e e e e e e e . .
-    e e e e e e e e e e e e .
-    e e e e e e e e e e e e .
-    e e e e e e e e e e e e .
-    e e e e e e e e e e e e .
-    e e e e e e e e e e e e .
-    e e e e e e e e e e e e .
-    . e e e e e e e e e e . .
-    . e e e e e e e e e e . .
-    b b e e e e e e e e b b .
-    d d b b b b b b b b d d .
-    d d b b b b b b b b d d .
-    . . . f f f f f f . . . .
-    . . . f f . . f f . . . .
+    . . . . . f f f f . . . . .
+    . . . f f e e e e f f . . .
+    . . f e e e e e e e e f . .
+    . f e e e e e e e e e e f .
+    f e e e e e e e e e e e e f
+    f e e e e e e e e e e e e f
+    f e e e e e e e e e e e e f
+    f e e e e e e e e e e e e f
+    f e e e e e e e e e e e e f
+    f e e e e e e e e e e e e f
+    . f e e e e e e e e e e f .
+    . f e e e e e e e e e e f .
+    f b b e e e e e e e e b b f
+    f d d b b b b b b b b d d f
+    f d d b b b b b b b b d d f
+    . f f f f f f f f f f f f .
+    . . . . f f . . f f . . . .
     """)]
 controller.down.on_event(ControllerButtonEvent.RELEASED, stop_anim)
 controller.up.on_event(ControllerButtonEvent.RELEASED, stop_anim)
