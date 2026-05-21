@@ -9,25 +9,6 @@ def on_up_pressed():
     animation.run_image_animation(Ben_Clark, up_frames, 120, True)
 controller.up.on_event(ControllerButtonEvent.PRESSED, on_up_pressed)
 
-def on_a_pressed():
-    global enemies, target, closest_distance, bullet22
-    # only works in level 2
-    if current_level != 2:
-        return
-    # find all phantoms
-    enemies = sprites.all_of_kind(SpriteKind.enemy)
-    # no enemies = no shooting
-    if len(enemies) == 0:
-        return
-    # closest phantom
-    target = enemies[0]
-    closest_distance = 999999
-    for enemy2 in enemies:
-        distance = Math.sqrt((enemy2.x - Ben_Clark.x) * (enemy2.x - Ben_Clark.x) + (enemy2.y - Ben_Clark.y) * (enemy2.y - Ben_Clark.y))
-        if distance < closest_distance:
-            closest_distance = distance
-            target = enemy2
-
 def on_left_pressed():
     animation.run_image_animation(Ben_Clark, left_frames, 120, True)
 controller.left.on_event(ControllerButtonEvent.PRESSED, on_left_pressed)
@@ -142,17 +123,34 @@ def on_on_overlap(sprite2: Sprite, otherSprite2: Sprite):
     info.change_life_by(-1)
     sprites.destroy(otherSprite2)
     pause(500)
+def on_a_pressed():
+    global enemies, target, closest_distance
+    # only works in level 2
+    if current_level != 2:
+        return
+    # find all phantoms
+    enemies = sprites.all_of_kind(SpriteKind.enemy)
+    # no enemies = no shooting
+    if len(enemies) == 0:
+        return
+    # closest phantom
+    target = enemies[0]
+    closest_distance = 999999
+    for enemy2 in enemies:
+        distance = Math.sqrt((enemy2.x - Ben_Clark.x) * (enemy2.x - Ben_Clark.x) + (enemy2.y - Ben_Clark.y) * (enemy2.y - Ben_Clark.y))
+        if distance < closest_distance:
+            closest_distance = distance
+            target = enemy2
 current_time3 = 0
 now = 0
 enemies2: List[Sprite] = []
-item: Sprite = None
-last_spawn_time = 0
-phantom2: Sprite = None
-bullet22: Sprite = None
 closest_distance = 0
 target: Sprite = None
 enemies: List[Sprite] = []
+item: Sprite = None
+last_spawn_time = 0
 current_level = 0
+phantom2: Sprite = None
 up_frames: List[Image] = []
 left_frames: List[Image] = []
 right_frames: List[Image] = []
@@ -160,8 +158,9 @@ down_frames: List[Image] = []
 spawn_quantity = 0
 spawn_cooldown = 0
 Ben_Clark: Sprite = None
-item2 = None
 direction = 0
+item2 = None
+bullet22 = None
 # =========================
 # PLAYER
 # =========================
