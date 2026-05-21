@@ -27,19 +27,6 @@ def on_a_pressed():
         if distance < closest_distance:
             closest_distance = distance
             target = enemy2
-    # create bullet
-    bullet22 = sprites.create(img("""
-            . . 5 5 . .
-            . 5 5 5 5 .
-            . . 5 5 . .
-            """),
-        SpriteKind.bullet)
-    bullet22.set_position(Ben_Clark.x, Ben_Clark.y)
-    # bullet auto follows closest phantom
-    bullet22.follow(target, 200)
-    # delete bullet after time
-    bullet22.lifespan = 2000
-controller.A.on_event(ControllerButtonEvent.PRESSED, on_a_pressed)
 
 def on_left_pressed():
     animation.run_image_animation(Ben_Clark, left_frames, 120, True)
@@ -111,6 +98,7 @@ def on_countdown_end():
     last_spawn_time = game.runtime()
     spawn_quantity = 1
     spawn_cooldown = 3000
+    game.splash("Find the gun")
 info.on_countdown_end(on_countdown_end)
 
 # =========================
@@ -138,17 +126,11 @@ def spawn_health_item():
     item.set_position(randint(12, 300), randint(12, 300))
 
 def on_right_pressed():
-    global direction
-    direction = 1
+    animation.run_image_animation(Ben_Clark, right_frames, 120, True)
 controller.right.on_event(ControllerButtonEvent.PRESSED, on_right_pressed)
 
-# =========================
-# AUTO AIM SHOOT
-# =========================
-
 def on_down_pressed():
-    global direction
-    direction = 4
+    animation.run_image_animation(Ben_Clark, down_frames, 120, True)
 controller.down.on_event(ControllerButtonEvent.PRESSED, on_down_pressed)
 
 def on_on_overlap3(sprite, otherSprite):
@@ -163,7 +145,6 @@ def on_on_overlap(sprite2: Sprite, otherSprite2: Sprite):
 current_time3 = 0
 now = 0
 enemies2: List[Sprite] = []
-direction = 0
 item: Sprite = None
 last_spawn_time = 0
 phantom2: Sprite = None
@@ -174,10 +155,13 @@ enemies: List[Sprite] = []
 current_level = 0
 up_frames: List[Image] = []
 left_frames: List[Image] = []
+right_frames: List[Image] = []
+down_frames: List[Image] = []
 spawn_quantity = 0
 spawn_cooldown = 0
 Ben_Clark: Sprite = None
 item2 = None
+direction = 0
 # =========================
 # PLAYER
 # =========================

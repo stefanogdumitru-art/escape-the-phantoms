@@ -10,7 +10,7 @@ function stop_anim() {
 controller.up.onEvent(ControllerButtonEvent.Pressed, function on_up_pressed() {
     animation.runImageAnimation(Ben_Clark, up_frames, 120, true)
 })
-controller.A.onEvent(ControllerButtonEvent.Pressed, function on_a_pressed() {
+function on_a_pressed() {
     let distance: number;
     
     //  only works in level 2
@@ -36,18 +36,8 @@ controller.A.onEvent(ControllerButtonEvent.Pressed, function on_a_pressed() {
         }
         
     }
-    //  create bullet
-    bullet22 = sprites.create(img`
-            . . 5 5 . .
-            . 5 5 5 5 .
-            . . 5 5 . .
-            `, SpriteKind.bullet)
-    bullet22.setPosition(Ben_Clark.x, Ben_Clark.y)
-    //  bullet auto follows closest phantom
-    bullet22.follow(target, 200)
-    //  delete bullet after time
-    bullet22.lifespan = 2000
-})
+}
+
 controller.left.onEvent(ControllerButtonEvent.Pressed, function on_left_pressed() {
     animation.runImageAnimation(Ben_Clark, left_frames, 120, true)
 })
@@ -128,6 +118,7 @@ info.onCountdownEnd(function on_countdown_end() {
     last_spawn_time = game.runtime()
     spawn_quantity = 1
     spawn_cooldown = 3000
+    game.splash("Find the gun")
 })
 //  =========================
 //  HEALTH ITEM SPAWN
@@ -154,15 +145,10 @@ function spawn_health_item() {
 }
 
 controller.right.onEvent(ControllerButtonEvent.Pressed, function on_right_pressed() {
-    
-    direction = 1
+    animation.runImageAnimation(Ben_Clark, right_frames, 120, true)
 })
-//  =========================
-//  AUTO AIM SHOOT
-//  =========================
 controller.down.onEvent(ControllerButtonEvent.Pressed, function on_down_pressed() {
-    
-    direction = 4
+    animation.runImageAnimation(Ben_Clark, down_frames, 120, true)
 })
 sprites.onOverlap(SpriteKind.Player, SpriteKind.Food, function on_on_overlap3(sprite: Sprite, otherSprite: Sprite) {
     info.changeLifeBy(1)
@@ -177,7 +163,6 @@ function on_on_overlap(sprite2: Sprite, otherSprite2: Sprite) {
 let current_time3 = 0
 let now = 0
 let enemies2 : Sprite[] = []
-let direction = 0
 let item : Sprite = null
 let last_spawn_time = 0
 let phantom2 : Sprite = null
@@ -188,10 +173,13 @@ let enemies : Sprite[] = []
 let current_level = 0
 let up_frames : Image[] = []
 let left_frames : Image[] = []
+let right_frames : Image[] = []
+let down_frames : Image[] = []
 let spawn_quantity = 0
 let spawn_cooldown = 0
 let Ben_Clark : Sprite = null
 let item2 = null
+let direction = 0
 //  =========================
 //  PLAYER
 //  =========================
@@ -217,7 +205,7 @@ spawn_quantity = 1
 //  =========================
 //  WALK ANIMATIONS
 //  =========================
-let down_frames = [img`
+down_frames = [img`
     . . . . . f f f f . . . . .
     . . . f f e e e e f f . . .
     . . f e e e e e e e e f . .
@@ -236,7 +224,7 @@ let down_frames = [img`
     . f f f f f f f f f f f f .
     . . . . f f . . f f . . . .
     `]
-let right_frames = [img`
+right_frames = [img`
     . . . . f f f f f f . . . . .
     . . f f e e e e e e f . . . .
     . f e e e e e e e e e f . . .
