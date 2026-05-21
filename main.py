@@ -5,6 +5,10 @@ class SpriteKind:
 def stop_anim():
     animation.stop_animation(animation.AnimationTypes.ALL, Ben_Clark)
 
+def on_up_pressed():
+    animation.run_image_animation(Ben_Clark, up_frames, 120, True)
+controller.up.on_event(ControllerButtonEvent.PRESSED, on_up_pressed)
+
 def on_a_pressed():
     global enemies, target, closest_distance, bullet22
     # only works in level 2
@@ -36,6 +40,11 @@ def on_a_pressed():
     # delete bullet after time
     bullet22.lifespan = 2000
 controller.A.on_event(ControllerButtonEvent.PRESSED, on_a_pressed)
+
+def on_left_pressed():
+    animation.run_image_animation(Ben_Clark, left_frames, 120, True)
+controller.left.on_event(ControllerButtonEvent.PRESSED, on_left_pressed)
+
 def on_on_overlap2(bullet2, phantom):
     sprites.destroy(phantom, effects.fire, 100)
     sprites.destroy(bullet2)
@@ -83,7 +92,6 @@ def spawn_phantom():
             break
     # Chase player
     phantom2.follow(Ben_Clark, 40)
-
 # =========================
 # LEVEL TRANSITION
 # =========================
@@ -155,19 +163,21 @@ def on_on_overlap(sprite2: Sprite, otherSprite2: Sprite):
 current_time3 = 0
 now = 0
 enemies2: List[Sprite] = []
-item2: Sprite = None
 direction = 0
 item: Sprite = None
+last_spawn_time = 0
 phantom2: Sprite = None
 bullet22: Sprite = None
 closest_distance = 0
 target: Sprite = None
 enemies: List[Sprite] = []
-last_spawn_time = 0
+current_level = 0
+up_frames: List[Image] = []
+left_frames: List[Image] = []
 spawn_quantity = 0
 spawn_cooldown = 0
-current_level = 0
-
+Ben_Clark: Sprite = None
+item2 = None
 # =========================
 # PLAYER
 # =========================
@@ -175,6 +185,7 @@ Ben_Clark = sprites.create(assets.image("""
     Ben Clark
     """), SpriteKind.player)
 controller.move_sprite(Ben_Clark, 150, 150)
+game.splash("Run and survive")
 scene.camera_follow_sprite(Ben_Clark)
 tiles.set_current_tilemap(tilemap("""
     level1
@@ -184,19 +195,15 @@ info.set_life(5)
 Ben_Clark.set_position(30, 135)
 sprites.on_overlap(SpriteKind.player, SpriteKind.enemy, on_on_overlap)
 sprites.on_overlap(SpriteKind.player, SpriteKind.enemy, on_on_overlap)
-
 # =========================
 # SPAWN SETTINGS
 # =========================
 spawn_cooldown = 5000
 spawn_quantity = 1
-
 # =========================
 # WALK ANIMATIONS
 # =========================
-
-down_frames = [
-img("""
+down_frames = [img("""
     . . . . . f f f f . . . . .
     . . . f f e e e e f f . . .
     . . f e e e e e e e e f . .
@@ -214,11 +221,8 @@ img("""
     f d d f b b b b b b f d d f
     . f f f f f f f f f f f f .
     . . . . f f . . f f . . . .
-""")
-]
-
-right_frames = [
-img("""
+    """)]
+right_frames = [img("""
     . . . . f f f f f f . . . . .
     . . f f e e e e e e f . . . .
     . f e e e e e e e e e f . . .
@@ -235,11 +239,8 @@ img("""
     . . f d d b b b b b f f . . .
     . . f f f f f f f f f f . . .
     . . . f f . . . f f f . . . .
-""")
-]
-
-left_frames = [
-img("""
+    """)]
+left_frames = [img("""
     . . . . . f f f f f f . . . .
     . . . f f e e e e e e f . . .
     . . f e e e e e e e e e f . .
@@ -256,11 +257,8 @@ img("""
     . . . f f b b b b b d d f . .
     . . . f f f f f f f f f f . .
     . . . . f f f . . . f f . . .
-""")
-]
-
-up_frames = [
-img("""
+    """)]
+up_frames = [img("""
     . . . . . f f f f . . . . .
     . . . f f e e e e f f . . .
     . . f e e e e e e e e f . .
@@ -278,53 +276,7 @@ img("""
     f d d b b b b b b b b d d f
     . f f f f f f f f f f f f .
     . . . . f f . . f f . . . .
-""")
-]
-
-# =========================
-# PLAY ONLY WHEN PRESSED
-# =========================
-
-def play_down():
-    animation.run_image_animation(
-        Ben_Clark,
-        down_frames,
-        120,
-        True
-    )
-controller.down.on_event(ControllerButtonEvent.PRESSED, play_down)
-
-def play_up():
-    animation.run_image_animation(
-        Ben_Clark,
-        up_frames,
-        120,
-        True
-    )
-controller.up.on_event(ControllerButtonEvent.PRESSED, play_up)
-
-def play_left():
-    animation.run_image_animation(
-        Ben_Clark,
-        left_frames,
-        120,
-        True
-    )
-controller.left.on_event(ControllerButtonEvent.PRESSED, play_left)
-
-def play_right():
-    animation.run_image_animation(
-        Ben_Clark,
-        right_frames,
-        120,
-        True
-    )
-controller.right.on_event(ControllerButtonEvent.PRESSED, play_right)
-
-# =========================
-# STOP ANIMATION WHEN RELEASED
-# =========================
-
+    """)]
 controller.down.on_event(ControllerButtonEvent.RELEASED, stop_anim)
 controller.up.on_event(ControllerButtonEvent.RELEASED, stop_anim)
 controller.left.on_event(ControllerButtonEvent.RELEASED, stop_anim)

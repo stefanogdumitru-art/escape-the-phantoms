@@ -7,6 +7,9 @@ function stop_anim() {
     animation.stopAnimation(animation.AnimationTypes.All, Ben_Clark)
 }
 
+controller.up.onEvent(ControllerButtonEvent.Pressed, function on_up_pressed() {
+    animation.runImageAnimation(Ben_Clark, up_frames, 120, true)
+})
 controller.A.onEvent(ControllerButtonEvent.Pressed, function on_a_pressed() {
     let distance: number;
     
@@ -44,6 +47,9 @@ controller.A.onEvent(ControllerButtonEvent.Pressed, function on_a_pressed() {
     bullet22.follow(target, 200)
     //  delete bullet after time
     bullet22.lifespan = 2000
+})
+controller.left.onEvent(ControllerButtonEvent.Pressed, function on_left_pressed() {
+    animation.runImageAnimation(Ben_Clark, left_frames, 120, true)
 })
 sprites.onOverlap(SpriteKind.bullet, SpriteKind.enemy, function on_on_overlap2(bullet2: Sprite, phantom: Sprite) {
     sprites.destroy(phantom, effects.fire, 100)
@@ -171,25 +177,29 @@ function on_on_overlap(sprite2: Sprite, otherSprite2: Sprite) {
 let current_time3 = 0
 let now = 0
 let enemies2 : Sprite[] = []
-let item2 : Sprite = null
 let direction = 0
 let item : Sprite = null
+let last_spawn_time = 0
 let phantom2 : Sprite = null
 let bullet22 : Sprite = null
 let closest_distance = 0
 let target : Sprite = null
 let enemies : Sprite[] = []
-let last_spawn_time = 0
+let current_level = 0
+let up_frames : Image[] = []
+let left_frames : Image[] = []
 let spawn_quantity = 0
 let spawn_cooldown = 0
-let current_level = 0
+let Ben_Clark : Sprite = null
+let item2 = null
 //  =========================
 //  PLAYER
 //  =========================
-let Ben_Clark = sprites.create(assets.image`
+Ben_Clark = sprites.create(assets.image`
     Ben Clark
     `, SpriteKind.Player)
 controller.moveSprite(Ben_Clark, 150, 150)
+game.splash("Run and survive")
 scene.cameraFollowSprite(Ben_Clark)
 tiles.setCurrentTilemap(tilemap`
     level1
@@ -225,7 +235,7 @@ let down_frames = [img`
     f d d f b b b b b b f d d f
     . f f f f f f f f f f f f .
     . . . . f f . . f f . . . .
-`]
+    `]
 let right_frames = [img`
     . . . . f f f f f f . . . . .
     . . f f e e e e e e f . . . .
@@ -243,8 +253,8 @@ let right_frames = [img`
     . . f d d b b b b b f f . . .
     . . f f f f f f f f f f . . .
     . . . f f . . . f f f . . . .
-`]
-let left_frames = [img`
+    `]
+left_frames = [img`
     . . . . . f f f f f f . . . .
     . . . f f e e e e e e f . . .
     . . f e e e e e e e e e f . .
@@ -261,8 +271,8 @@ let left_frames = [img`
     . . . f f b b b b b d d f . .
     . . . f f f f f f f f f f . .
     . . . . f f f . . . f f . . .
-`]
-let up_frames = [img`
+    `]
+up_frames = [img`
     . . . . . f f f f . . . . .
     . . . f f e e e e f f . . .
     . . f e e e e e e e e f . .
@@ -280,25 +290,7 @@ let up_frames = [img`
     f d d b b b b b b b b d d f
     . f f f f f f f f f f f f .
     . . . . f f . . f f . . . .
-`]
-//  =========================
-//  PLAY ONLY WHEN PRESSED
-//  =========================
-controller.down.onEvent(ControllerButtonEvent.Pressed, function play_down() {
-    animation.runImageAnimation(Ben_Clark, down_frames, 120, true)
-})
-controller.up.onEvent(ControllerButtonEvent.Pressed, function play_up() {
-    animation.runImageAnimation(Ben_Clark, up_frames, 120, true)
-})
-controller.left.onEvent(ControllerButtonEvent.Pressed, function play_left() {
-    animation.runImageAnimation(Ben_Clark, left_frames, 120, true)
-})
-controller.right.onEvent(ControllerButtonEvent.Pressed, function play_right() {
-    animation.runImageAnimation(Ben_Clark, right_frames, 120, true)
-})
-//  =========================
-//  STOP ANIMATION WHEN RELEASED
-//  =========================
+    `]
 controller.down.onEvent(ControllerButtonEvent.Released, stop_anim)
 controller.up.onEvent(ControllerButtonEvent.Released, stop_anim)
 controller.left.onEvent(ControllerButtonEvent.Released, stop_anim)
